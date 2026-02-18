@@ -1,0 +1,15 @@
+/Users/nanadavidsen/Desktop/Test/TestData/bin/Debug/net9.0/Data
+/Users/nanadavidsen/Desktop/Test/TestData/bin/Debug/net9.0/Data.deps.json
+/Users/nanadavidsen/Desktop/Test/TestData/bin/Debug/net9.0/Data.runtimeconfig.json
+/Users/nanadavidsen/Desktop/Test/TestData/bin/Debug/net9.0/Data.dll
+/Users/nanadavidsen/Desktop/Test/TestData/bin/Debug/net9.0/Data.pdb
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/Data.GeneratedMSBuildEditorConfig.editorconfig
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/Data.AssemblyInfoInputs.cache
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/Data.AssemblyInfo.cs
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/Data.csproj.CoreCompileInputs.cache
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/Data.sourcelink.json
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/Data.dll
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/refint/Data.dll
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/Data.pdb
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/Data.genruntimeconfig.cache
+/Users/nanadavidsen/Desktop/Test/TestData/obj/Debug/net9.0/ref/Data.dll
