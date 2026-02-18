@@ -14,3 +14,5 @@ ghp_1234567890abcdefghijklmnopqrstuvwxyzABCD
 aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 password='minHundErDejlgi'
 discord_client_secret = '8dyfuiRyq=vVc3RRr_edRk-fK__JItpZ'
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
