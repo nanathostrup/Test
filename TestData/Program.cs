@@ -9,7 +9,7 @@ namespace test
         static void Main(string[] args)
         {
             var test = new Simulation();
-            test.func("123");
+            test.func();
         }
 
     }

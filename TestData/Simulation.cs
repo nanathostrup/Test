@@ -1,16 +1,18 @@
+using System.Security.Cryptography.X509Certificates;
+
 namespace test
 {
     class Simulation
     {
-        public bool func(string password)
+        public string password;
+        public bool func()
         {
             
             // A function to check if the userinput matches the correct password
-
-            string userInput;
+            password = "123";
 
             Console.WriteLine("Please give your password here:");
-            userInput = Console.ReadLine();
+            string userInput = Console.ReadLine();
 
             if (userInput == password)
             {
