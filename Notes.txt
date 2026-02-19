@@ -1,0 +1,23 @@
+
+trufflehog filesystem path/to/file1.txt path/to/file2.txt path/to/dir
+trufflehog git https://github.com/trufflesecurity/test_keys --results=verified
+	Trufflehogs egen tests
+
+Tests in git repo ‘Test’
+	* trufflehog git https://github.com/nanathostrup/Test --results=verified
+		* trufflehog git https://github.com/trufflesecurity/test_keys --results=verified
+			Eksempel fra Trufflehog selv
+	* git secrets --scan (efter rækkefølgen under:)
+		brew install git-secrets
+		path/to/repo git install 
+		git secrets --register-aws
+		git secrets --scan
+		git secrets —list (checker efter hvilke regler der scannes for)
+	* gitleaks dir -v testing.txt
+		gitleaks detect -s Test -v (virker på præcis samme måde som overstående)
+	* semgrep scan
+	* aikido går man ind på hjemmeside ->repositories, og her kan man se secrets
+	* git commit -m “message”
+		Det er inbuilt gituhub secret scanner der fanger her
+	* SpectralOps is being a bitch og lader mig ikke lave en konto for some reason
+
