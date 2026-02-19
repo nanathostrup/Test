@@ -5,7 +5,7 @@ Types of data:
     - API keys/tokens (e.g., AWS keys, OAuth tokens) - check format så det kan emulates
     - Cryptographic keys (Private keys, encryption keys, or SSH keys)
     - Session/Token Secrets - check format så det kan emulates
-    - Obfuscated/Encoded Secrets (e.g. base 64 encided stuff)
+    - Obfuscated/Encoded Secrets (e.g. base 64 encided stuff) (MAYBE)
 
 Types of files:
     - source code - her er det c# filer

@@ -1,3 +1,4 @@
+Notes for how to run different secret scanning tools
 
 trufflehog filesystem path/to/file1.txt path/to/file2.txt path/to/dir
 trufflehog git https://github.com/trufflesecurity/test_keys --results=verified

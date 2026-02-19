@@ -1,7 +1,6 @@
-import requests
-import numpy as np
-from flask import Flask
-
 
 def main():
     print('Hello')
+
+if __name__ == "__main__": 
+    main()
