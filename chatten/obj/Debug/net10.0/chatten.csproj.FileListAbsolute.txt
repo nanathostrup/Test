@@ -1,0 +1,15 @@
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\bin\Debug\net10.0\chatten.exe
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\bin\Debug\net10.0\chatten.deps.json
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\bin\Debug\net10.0\chatten.runtimeconfig.json
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\bin\Debug\net10.0\chatten.dll
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\bin\Debug\net10.0\chatten.pdb
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\chatten.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\chatten.AssemblyInfoInputs.cache
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\chatten.AssemblyInfo.cs
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\chatten.csproj.CoreCompileInputs.cache
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\chatten.sourcelink.json
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\chatten.dll
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\refint\chatten.dll
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\chatten.pdb
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\chatten.genruntimeconfig.cache
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\chatten\obj\Debug\net10.0\ref\chatten.dll
