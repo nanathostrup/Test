@@ -1,0 +1,51 @@
+##AWS SECRET KEY ID VALUES##
+AKIA1234567890ABCD
+AKIAJKS9237H90HD04
+AKIAJKS9237H90HD045C
+AKIAAAAAAAAAAAAAAAAA
+AKIAZZZZZZZZZZZZZZZZ
+AKIA1234567890ABCDEF
+AKIAIOSFODNN73XAMPL3
+ASIAY34FZKBOKMUTVV7A 
+
+##RANDOM BREAK##
+'Hej!'
+
+##AWS SECRET ACCESS KEY##
+aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCY3XAMPL3K3Y
+wJalrXUtnFEMI/K7MDENG/bPxRfiCYABCDEFGHIJ
+wJalrXUtnFEMI/K7MDENG/bPxRfiCY3XAMPLEKEY
+
+##JWS SIGNING KEY##
+jws_signing_key=WOlJeDRXzIDR9N0xXrQjIOYNoMYrlEvMz3HF91RTy9F
+
+##HARDCODED PASSWORDS##
+1234
+password='minHundErDejlgi'
+password=ex@mplepassword
+
+##DISCORD SECRETS##
+discord_client_secret = '8dyfuiRyq=vVc3RRr_edRk-fK__JItpZ'
+ghp_1234567890abcdefghijklmnopqrstuvwxyzABCD
+my_super_secret_pass_4testing
+
+##RANDOM ENCODINGS##
+fzUGrXHXniARsv1ruPV2MfmQfeBqfj/C/1rLkSk2zes=
+UFkyCfB74RETV0j9rL4Cmwr334A=
+Cpc1PZ3ed5yKFMAuUa+t4g==
+
+##RANDOM SSH KEY##
++---[RSA 4096]----+
+| o...            |
+|o .o             |
+|.o.              |
+|..+.             |
+|++  .   S. .     |
+|B++o . .=.+      |
+|@*+ . oo O..     |
+|=E  ..  + *.     |
+|+.o .+++.o..     |
++----[SHA256]-----+
+
+-----BEGIN RSA PRIVATE KEY-----
+v5PkYJ0atm3iKr9aiWgFJYmpuwhsti48AmdyxKykzsM 

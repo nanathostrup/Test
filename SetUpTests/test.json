@@ -1,0 +1,48 @@
+[
+   {
+        "user_id" : 141,
+        "scopes" : [
+            "api"
+        ],
+        "name" : "token",
+        "expires_at" : "2021-01-31",
+        "id" : 42,
+        "active" : true,
+        "created_at" : "2021-01-20T22:11:48.151Z",
+        "description": "Test Token description",
+        "last_used_at" : null,
+        "revoked" : false,
+        "access_level" : 40
+   },
+   {
+        "user_id" : 141,
+        "scopes" : [
+            "read_api"
+        ],
+        "name" : "token-2",
+        "expires_at" : "2021-01-31",
+        "id" : 43,
+        "active" : false,
+        "created_at" : "2021-01-21T12:12:38.123Z",
+        "description": "Test Token description",
+        "revoked" : true,
+        "last_used_at" : "2021-02-13T10:34:57.178Z",
+        "access_level" : 40
+   },
+    {
+        "scopes" : [
+            "api",
+            "read_repository"
+        ],
+        "active" : true,
+        "name" : "test",
+        "revoked" : false,
+        "created_at" : "2021-01-21T19:35:37.921Z",
+        "description": "Test Token description",
+        "user_id" : 166,
+        "id" : 58,
+        "expires_at" : "2021-01-31",
+        "token" : "6hrFDATxrG9w14QY9wwnmVhLE0Wg6LIvwOwUaxz761m1JfRp4rs8Mzozk5xhSkw0_MQz6bpcJnrFUDwp5lPPFC157dHxbkKlDiQ9XY3ZIP8zAGCsS8ruN2uKjIaIargX",
+        "access_level": 30  
+    }
+]
