@@ -1,0 +1,15 @@
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\bin\Debug\net10.0\Usecase.exe
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\bin\Debug\net10.0\Usecase.deps.json
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\bin\Debug\net10.0\Usecase.runtimeconfig.json
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\bin\Debug\net10.0\Usecase.dll
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\bin\Debug\net10.0\Usecase.pdb
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\Usecase.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\Usecase.AssemblyInfoInputs.cache
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\Usecase.AssemblyInfo.cs
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\Usecase.csproj.CoreCompileInputs.cache
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\Usecase.sourcelink.json
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\Usecase.dll
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\refint\Usecase.dll
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\Usecase.pdb
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\Usecase.genruntimeconfig.cache
+C:\Users\natd\OneDrive - Netcompany\Desktop\test\Usecase\obj\Debug\net10.0\ref\Usecase.dll
