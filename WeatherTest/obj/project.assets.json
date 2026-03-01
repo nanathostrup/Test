@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\chatten\\chatten.csproj",
+      "projectUniqueName": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\chatten.csproj",
       "projectName": "chatten",
-      "projectPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\chatten\\chatten.csproj",
+      "projectPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\chatten.csproj",
       "packagesPath": "C:\\Users\\natd\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\chatten\\obj\\",
+      "outputPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\natd\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -25,6 +25,9 @@
       "originalTargetFrameworks": [
         "net10.0"
       ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",

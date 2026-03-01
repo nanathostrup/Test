@@ -8,7 +8,6 @@ namespace WeatherStation
     {
         // Hardcoded API key
         private const string OpenWeather = "ea413b8c6e9657e69c24cc2b83e6d894"; // generated here: https://home.openweathermap.org/api_keys
-        private const string JwtSigningSecret = "WOlJeDRXzIDR9N0xXrQjIOYNoMYrlEvMz3HF91RTy"; //generated here: https://jwtsecretkeygenerator.com/
         private readonly HttpClient _httpClient = new HttpClient();
         public async Task<string> GetWeatherAsync(string city)
         {
@@ -17,7 +16,7 @@ namespace WeatherStation
             try
             {
                 var response = await _httpClient.GetStringAsync(url);
-                return $"Weather data received successfully: \n\n{response}";  //\nJWT Secret in memory: {JwtSigningSecret}\n\n{response}";
+                return $"Weather data received successfully: \n\n{response}";
             }
             catch (Exception ex)
             {

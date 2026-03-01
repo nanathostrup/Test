@@ -1,18 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using WeatherStation;
-using Services;
-
-namespace WeatherStation
+﻿namespace WeatherStation
 {
     class Program
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("=== Weather Station ===");
-
             var authService = new AuthService();
-            var weatherService = new WeatherService();
+            var weatherService = new WeatherServices();
+
+            //Testing the leak of secrets in "action" not just as an unused funciton
+            authService.TestLeak();
+            weatherService.TestLeak();
 
             Console.Write("Username: ");
             string username = Console.ReadLine();
