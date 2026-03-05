@@ -9,8 +9,9 @@ class Program
     static void Main()
     {
         // Path to the C# file you want to analyze
-        // string filePath = @"C:\Users\natd\OneDrive - Netcompany\Desktop\test\\WeatherSimple\";
-        string filePath = @"C:\Users\natd\OneDrive - Netcompany\Desktop\test\RosTest\Test.cs";
+        string filePath = @"C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherServices.cs";
+        // string filePath = @"C:\Users\natd\OneDrive - Netcompany\Desktop\test\RosTest\Test.cs";
+        //  string filePath = @"C:\Users\natd\OneDrive - Netcompany\Desktop\test\PasswordAuthentication\pwauth.cs";
 
 
         if (!File.Exists(filePath))

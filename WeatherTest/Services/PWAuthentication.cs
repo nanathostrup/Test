@@ -12,14 +12,14 @@ namespace WeatherStation
         private const string AdminUsername = "admin";                                                       //USERNAME
         private const string AdminPassword = "admin";                                                       //PASSWORD
         //Fra chatten hehe :)
-        public static async Task LoginAsync(string path)
+        public static async Task LoginAsync()
         {
             using var client = new HttpClient();
 
             var json = $"{{\"username\":\"{AdminUsername}\",\"password\":\"{AdminPassword}\"}}";
             var content = new StringContent(json, Encoding.UTF8, "json");
 
-            var response = await client.PostAsync("https://example.com/api/login", content);                //virker ikke
+            var response = await client.PostAsync("https://example.com/api/login", content);                //hardcoded credentials, in plaintext, sent on. Virker ikke (sjovt nok)
 
             Console.WriteLine($"Status: {response.StatusCode}");
         }

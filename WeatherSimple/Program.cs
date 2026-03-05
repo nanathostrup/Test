@@ -26,6 +26,8 @@
 
             string weather = await weatherService.GetWeatherAsync(city);
             Console.WriteLine(weather);
+
+            await AuthService.LoginAsync(); //Selv om funktion ikke virker testes det om den bliver detected når "i brug".
         }
     }
 }

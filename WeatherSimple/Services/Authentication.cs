@@ -23,6 +23,8 @@ namespace WeatherStation
             }
             return username == AdminUsername && password == AdminPassword;
         }
+
+        // Tak til chat:)
         public static async Task LoginAsync()
         {
             using var client = new HttpClient();
