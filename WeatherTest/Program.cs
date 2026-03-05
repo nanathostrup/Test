@@ -6,8 +6,9 @@
         {
             var authService = new AuthService();
             var weatherService = new WeatherServices();
+            var pwAuthService = new PasswordAuthenticationService();
 
-            //Testing the leak of secrets in "action" not just as an unused funciton
+            //Testing the leak of secrets in "action" not just as an unused function
             authService.TestLeak();
             weatherService.TestLeak();
 
@@ -16,6 +17,10 @@
 
             Console.Write("Password: ");
             string password = Console.ReadLine();
+
+            //Test of another way of authentication - sending credentials to a hhtp thing.
+            string path = @"C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\PWsAuthentication.json";
+            await PasswordAuthenticationService.LoginAsync("path");
 
             if (!authService.Login(username, password))
             {

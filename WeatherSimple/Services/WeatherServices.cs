@@ -7,12 +7,13 @@ namespace WeatherStation
     public class WeatherServices
     {
         // Hardcoded API key
-        private const string OpenWeather = "ea413b8c6e9657e69c24cc2b83e6d894"; // generated here: https://home.openweathermap.org/api_keys
+        private const string OpenWeather = "ea413b8c6e9657e69c24cc2b83e6d894"; // generated here: https://home.openweathermap.org/api_keys -- DONT USE
+        private const string OpenWeatherForTest = "ea413b8c6e9657e69c24cc2b83e6d895";
         private readonly HttpClient _httpClient = new HttpClient();
         public async Task<string> GetWeatherAsync(string city)
         {
             string url =
-             $"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={OpenWeather}&units=metric"; // Actually working website fetching weather forecast
+             $"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={OpenWeatherForTest}&units=metric"; // Actually working website fetching weather forecast
             try
             {
                 var response = await _httpClient.GetStringAsync(url);

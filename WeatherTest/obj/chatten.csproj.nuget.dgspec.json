@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\chatten.csproj": {}
+    "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\WeatherTest\\chatten.csproj": {}
   },
   "projects": {
-    "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\chatten.csproj": {
+    "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\WeatherTest\\chatten.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\chatten.csproj",
+        "projectUniqueName": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\WeatherTest\\chatten.csproj",
         "projectName": "chatten",
-        "projectPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\chatten.csproj",
+        "projectPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\WeatherTest\\chatten.csproj",
         "packagesPath": "C:\\Users\\natd\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\obj\\",
+        "outputPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\WeatherTest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\natd\\AppData\\Roaming\\NuGet\\NuGet.Config"

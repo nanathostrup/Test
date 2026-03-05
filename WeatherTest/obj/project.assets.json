@@ -13,9 +13,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\chatten.csproj",
-      "projectName": "chatten",
-      "projectPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\chatten.csproj",
+      "projectUniqueName": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\WeatherTest.csproj",
+      "projectName": "WeatherTest",
+      "projectPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\WeatherTest.csproj",
       "packagesPath": "C:\\Users\\natd\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\WeatherTest\\obj\\",
       "projectStyle": "PackageReference",

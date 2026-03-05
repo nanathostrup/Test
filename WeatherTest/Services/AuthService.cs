@@ -16,8 +16,8 @@ namespace WeatherStation
         private const string Super_Secret2 = "kfzwfmZFxhV9e8kSd93IT9xJsJvmHYZC";                            //PASSWORD - randomly generated here: https://www.random.org/strings/?num=10&len=32&digits=on&upperalpha=on&loweralpha=on&unique=on&format=html&rnd=new
         
         // Encodings with Base64 and hex
-        private const string Base64Secret = "U3VwZXJTZWNyZXRLZXlGb3JUZXN0aW5nMTIz";                         //ENCODING
-        private const string HexSecret = "4a6f686e446f654150495365637265744b6579";                          //ENCODING
+        private const string Base64Secret = "YmFya2ZpZnRoaWNlbWVhbnRzdWNoc2Nob29sYnVzaGs=";                 //ENCODING - Randomly generated here: https://www.convertsimple.com/random-base64-generator/
+        private const string HexSecret = "4a6f686e446f654150495365637265744b6579";                          //ENCODING - Randomly generated here: https://www.browserling.com/tools/random-hex
  
         // Hardcoded database connection string (contains password)
         private const string ConnectionString =
@@ -42,6 +42,21 @@ namespace WeatherStation
             }
             return username == AdminUsername && password == AdminPassword;
         }
+
+
+        // Exempel fået fra chat :) hehe
+        public static async Task LoginAsync()
+        {
+            using var client = new HttpClient();
+
+            var json = $"{{\"username\":\"{AdminUsername}\",\"password\":\"{AdminPassword}\"}}";
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("https://example.com/api/login", content);
+
+            Console.WriteLine($"Status: {response.StatusCode}");
+        }
+
         public void TestLeak()
         {
             // Test to see if a leak of a password is detected by tools

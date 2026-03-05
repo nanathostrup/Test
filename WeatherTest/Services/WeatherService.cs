@@ -5,7 +5,7 @@ namespace WeatherStation
         private readonly HttpClient _httpClient = new HttpClient();
 
         // Hardcoded API key
-        private const string OpenWeather = "ea413b8c6e9657e69c24cc2b83e6d894";                              //API KEY generated here: https://home.openweathermap.org/api_keys
+        private const string OpenWeather = "ea413b8c6e9657e69c24cc2b83e6d894";                              //API KEY generated here (real for Openweather): https://home.openweathermap.org/api_keys
         private const string heltvildtsejtvejApiKey = "api_XweVmYIoqSCHxVOb4Q6C1zMFs0O92zPu";               //API KEY (randomized string with prefix "api") generated here: https://generate-random.org/api-keys with prefix 'api'
 
         // AWS  
@@ -84,16 +84,13 @@ v5PkYJ0atm3iKr9aiWgFJYmpuwhsti48AmdyxKykzsM
             Console.WriteLine(AwsSessionToken2);
             Console.WriteLine(AzureStorage);
             Console.WriteLine(GoogleApiKey);
-            Console.WriteLine(FirebaseConfig);
-            Console.WriteLine(StripeLive);
-            Console.WriteLine(StripeTest);
+            Console.WriteLine(StripeExample);
             Console.WriteLine(heltvildtsejtvejApiKey2);
+            Console.WriteLine(StripeServer);
+            Console.WriteLine(StripeClient);            
             Console.WriteLine(GitHubClassic);
             Console.WriteLine(GitHubFineGrained);
             Console.WriteLine(GitLabToken);
-            Console.WriteLine(SlackBot);
-            Console.WriteLine(SlackWebhook);
-            Console.WriteLine(DiscordBotToken);
             Console.WriteLine(TelegramBotToken);
             Console.WriteLine(TwilioAuthToken);
             Console.WriteLine(SendGridApiKey);
@@ -101,8 +98,6 @@ v5PkYJ0atm3iKr9aiWgFJYmpuwhsti48AmdyxKykzsM
             Console.WriteLine(JwtExample);
             Console.WriteLine(JwtSigning);
             Console.WriteLine(JwtSigningSecret);
-            Console.WriteLine(SshPrivateKey);
-            Console.WriteLine(Pkcs8PrivateKey);
         }
     }
 }
