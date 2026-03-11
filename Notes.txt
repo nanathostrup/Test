@@ -14,6 +14,8 @@ Tests in git repo ‘Test’
 		git secrets --register-aws
 		git secrets --scan
 		git secrets —list (checker efter hvilke regler der scannes for)
+			FYI til at tilføje patterns: git secrets --add <pattern>
+			FYI til fps: git secrets --add --allowed 'my regex pattern'
 	* gitleaks dir -v testing.txt
 		gitleaks detect -s Test -v (virker på præcis samme måde som overstående)
 	* semgrep scan

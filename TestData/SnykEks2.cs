@@ -2,16 +2,21 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-
-//Test from https://learn.snyk.io/lesson/hardcoded-secrets/?utm_source=chatgpt.com&ecosystem=csharp
-public class Snowy
+public class StormySecure
 {
-    private static readonly string ApiKey = "secret_5ebe2294ecd0e0f08eab7690d2a6ee69"; // <-- Oops
-
     public static async Task<string> GetWeatherAsync(string town)
     {
+        // Load the API key from an environment variable
+        string? apiKey = Environment.GetEnvironmentVariable("WEATHER_API_KEY");
+
+        // If the API key is missing, throw an error
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            throw new Exception("API key not found in environment variables.");
+        }
+
         string encodedTown = Uri.EscapeDataString(town);
-        string encodedApiKey = Uri.EscapeDataString(ApiKey);
+        string encodedApiKey = Uri.EscapeDataString(apiKey);
 
         string url = $"https://api.weatherwand.xyz/v1/forecast?town={encodedTown}&key={encodedApiKey}";
 

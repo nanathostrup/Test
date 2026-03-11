@@ -2,9 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-
-//Test from https://learn.snyk.io/lesson/hardcoded-secrets/?utm_source=chatgpt.com&ecosystem=csharp
-public class Snowy
+public class Stormy
 {
     private static readonly string ApiKey = "secret_5ebe2294ecd0e0f08eab7690d2a6ee69"; // <-- Oops
 

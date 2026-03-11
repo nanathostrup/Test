@@ -6,8 +6,8 @@ namespace WeatherStation
 {
     public class WeatherServices
     {
-        // Hardcoded API key
-        string apiKey = Environment.GetEnvironmentVariable("MY_API_KEY");
+        // Hardcoded API key in env file
+        string? apiKey = Environment.GetEnvironmentVariable("MY_API_KEY");
         private readonly HttpClient _httpClient = new HttpClient();
         public async Task<string> GetWeatherAsync(string city)
         {

@@ -1,3 +1,5 @@
+using System.Buffers.Text;
+
 namespace WeatherStation
 {
     public class WeatherServices
@@ -5,7 +7,8 @@ namespace WeatherStation
         private readonly HttpClient _httpClient = new HttpClient();
 
         // Hardcoded API key
-        private const string OpenWeather = "ea413b8c6e9657e69c24cc2b83e6d894";                              //API KEY generated here (real for Openweather): https://home.openweathermap.org/api_keys
+        private const string OpenWeather2 = "ea413b8c6e9657e69c24ca2b83e6d895";                             //API KEY modified from real API key whivh was generated here (real for Openweather): https://home.openweathermap.org/api_keys
+
         private const string heltvildtsejtvejApiKey = "api_XweVmYIoqSCHxVOb4Q6C1zMFs0O92zPu";               //API KEY (randomized string with prefix "api") generated here: https://generate-random.org/api-keys with prefix 'api'
 
         // AWS  
@@ -58,6 +61,10 @@ namespace WeatherStation
 -----BEGIN RSA PRIVATE KEY-----
 v5PkYJ0atm3iKr9aiWgFJYmpuwhsti48AmdyxKykzsM
 -----END OPENSSH PRIVATE KEY-----";                                                                         // SSH KEY - generated in terminal using command: ssh-keygen -t
+
+        // Random strings
+        private const string hex = "ec820703bf716f1bf64a2e54199395ed";                                      // Randomized hex string - geneated here: https://www.browserling.com/tools/random-hex
+        private const string base64 = "YXZhaWxhYmxldGlyZWRldmVudHRhbGVzcmVndWxhcnByb2R1Y2VlbGV2ZW5zdGFydGM="; // Randomized base64 string - generated here: https://www.convertsimple.com/random-base64-generator/           
         
         public async Task<string> GetWeatherAsync(string city)
         {
@@ -76,7 +83,7 @@ v5PkYJ0atm3iKr9aiWgFJYmpuwhsti48AmdyxKykzsM
         public void TestLeak()
         {
             // Testing to see if a leak is detected with tools
-            Console.WriteLine(OpenWeather);
+            Console.WriteLine(OpenWeather2);
             Console.WriteLine(heltvildtsejtvejApiKey);
             Console.WriteLine(AwsAccessKey);
             Console.WriteLine(AwsSecretKey);
@@ -98,6 +105,9 @@ v5PkYJ0atm3iKr9aiWgFJYmpuwhsti48AmdyxKykzsM
             Console.WriteLine(JwtExample);
             Console.WriteLine(JwtSigning);
             Console.WriteLine(JwtSigningSecret);
+            Console.WriteLine(SSHKey);
+            Console.WriteLine(hex);
+            Console.WriteLine(base64);
         }
     }
 }
