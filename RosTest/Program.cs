@@ -76,7 +76,7 @@ class Program
     }
 
     // TODO: OPTIMIZE!
-    static List<string> WalkAST(SyntaxTree tree, List<string> )
+    static List<string> WalkAST(SyntaxTree tree, List<string> PossibleDetections)
     {
         // if invocation expression
             // go to identifier token node
