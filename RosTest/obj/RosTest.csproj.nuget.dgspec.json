@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\RosTest\\RosTest.csproj": {}
+    "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\RosTest\\RosTest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\RosTest\\RosTest.csproj": {
+    "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\RosTest\\RosTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\RosTest\\RosTest.csproj",
+        "projectUniqueName": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\RosTest\\RosTest.csproj",
         "projectName": "RosTest",
-        "projectPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\RosTest\\RosTest.csproj",
+        "projectPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\RosTest\\RosTest.csproj",
         "packagesPath": "C:\\Users\\natd\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\Test\\RosTest\\obj\\",
+        "outputPath": "C:\\Users\\natd\\OneDrive - Netcompany\\Desktop\\test\\RosTest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\natd\\AppData\\Roaming\\NuGet\\NuGet.Config"

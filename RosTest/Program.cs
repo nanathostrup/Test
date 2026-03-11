@@ -34,30 +34,37 @@ class Program
         Console.WriteLine("Files being processed into an AST:");
         foreach (string file in files)
         {
-            Console.WriteLine("     *" + file);
+            Console.WriteLine("     " + file);
             string code = File.ReadAllText(file);
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code); // parse code to AST
             trees.Add(tree);
         }
-       
-        //Travrese trees and look for environment calls
-        List<string> PossibleDetections = new List<string>();
+
+        var walker = new Walker();
         foreach (SyntaxTree tree in trees)
         {
-            WalkAST(tree, PossibleDetections);  //SHIT METODE MED 4 FOR LOOPS BUT GIVES ME RIGHT RESULTS
+            //Check the current AST for invocation expressions
+            SyntaxNode root = tree.GetRoot();
+            walker.Visit(root);
         }
-
+        
+        //Test at vi får de rigtige ud
+        foreach (var stringarg in walker.StringArgs)
+        {
+            Console.WriteLine("Input to GetEnvironmentVariable(): " + stringarg);
+        }
+    
         //For printing each AST
         // foreach (SyntaxTree tree in trees)
         // {
-            // Console.WriteLine(" ================================= NEW SYNTAX TREE ================================= ");
-            // Get the root of the tree
-            // SyntaxNode root = tree.GetRoot();
-            // PrintNode(root, 0);
+        //     Console.WriteLine(" ================================= NEW SYNTAX TREE ================================= ");
+        //     // Get the root of the tree
+        //     SyntaxNode root = tree.GetRoot();
+        //     PrintNode(root, 0);
         // }
     }
 
-
+    //Tyv stjålet fra sooomewhere... dont remember hvor...
     static void PrintNode(SyntaxNode node, int indent)
     {
         var padding = new string(' ', indent * 2);
@@ -74,80 +81,4 @@ class Program
             PrintNode(child, indent + 1);
         }
     }
-
-    // TODO: OPTIMIZE!
-    static List<string> WalkAST(SyntaxTree tree, List<string> PossibleDetections)
-    {
-        // if invocation expression
-            // go to identifier token node
-            // if idtoken == GetEnvironmentToken
-                // get invocationmethod's argument list childs child - string litteral
-                //Print that child child
-            //Check the current AST for invocation expressions
-            SyntaxNode root = tree.GetRoot();
-            // Get all invocation expressions
-            var invocations = root
-                .DescendantNodes()
-                .OfType<InvocationExpressionSyntax>();
-            
-            foreach (var invocation in invocations)
-                {
-                    //Extracting the string litteral from decendants
-                    // Console.WriteLine("Invocation Expression: " + invocation);   
-
-                    //Extract places where we have an Environment Variable call
-                    var identifiertokens = invocation
-                        .DescendantTokens()
-                        .Where(t => t.IsKind(SyntaxKind.IdentifierToken))
-                        .Select(t => t.ValueText);
-                    foreach(var identifiertoken in identifiertokens)
-                    {
-                        if (identifiertoken == "GetEnvironmentVariable")
-                        {
-                            Console.WriteLine("Invocation Expression, Identifier Token: " + identifiertoken);
-                            var stringliterals = invocation
-                                .DescendantNodes()
-                                .OfType<LiteralExpressionSyntax>()
-                                .Where(l => l.IsKind(SyntaxKind.StringLiteralExpression))
-                                .Select(l => l.Token.ValueText);
-                            
-                            foreach (var stringliteral in stringliterals)
-                            {
-                                Console.WriteLine("Child string litteral: " + stringliteral);
-                                PossibleDetections.Add(stringliteral);
-                            }
-                        }
-                    }
-                }
-            return PossibleDetections;
-    }
-
-    // void Walk(SyntaxNode node)
-    //     {
-    //         Console.WriteLine(node.Kind());
-    //         foreach (var child in node.ChildNodes())
-    //         {
-    //             if (child == "GetEnvitonmentToken")
-    //             {
-    //                 Console.WriteLine(":)");
-    //             }
-    //             else
-    //             {
-    //                 Walk(child);                    
-    //             }
-    //         }
-    //     }
-
-
-// 
-//     public void inorderTraversal(TreeNode root) {
-//         if (root != null) {
-//             inorderTraversal(root.left);
-//             Console.WriteLine(root.data + " ");
-//             inorderTraversal(root.right);
-//         }
-// }
-
-
-
 }
