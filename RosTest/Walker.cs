@@ -13,14 +13,13 @@ class Walker : CSharpSyntaxWalker
         //Does the invocation have a child that is GetEnvVar?
             //No? Return
             //Yes 
-                //get invocations argumentList and add the string litteral to a list
-        // List<string> StringArgs = new List<string>();
+                //get invocation's argumentList and add the string litteral (which is an argument) to a list
 
-        bool GenEnvVar = invocation.DescendantTokens()
+        bool GetEnvVar = invocation.DescendantTokens()
                 .Any(t => t.IsKind(SyntaxKind.IdentifierToken) 
                             && t.ValueText == "GetEnvironmentVariable");
 
-        if (GenEnvVar)
+        if (GetEnvVar)
         {
             var arglist = invocation.ArgumentList //We want the string litteral that is from the argument list to ensure we have the input for the GetEnvironmentVariable().
                 .Arguments
@@ -32,7 +31,7 @@ class Walker : CSharpSyntaxWalker
 
             if (arglist.Any())
             {
-                StringArgs.AddRange(arglist);
+                StringArgs.AddRange(arglist); // add to global variable. This could probably be done better, but works for now
             }
         }
         base.VisitInvocationExpression(invocation);
