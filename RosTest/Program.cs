@@ -28,7 +28,7 @@ class Program
         foreach (SyntaxTree tree in trees)
         {
             SyntaxNode root = tree.GetRoot(); //Get the root of the tree
-            walker.Visit(root); //Check the current AST for invocation expressions
+            walker.Visit(root); //Check the current AST for invocation expressions. Walker går gennem træet, og der er blevet lavet sær regel for invocation expressions
         }
         foreach (var stringarg in walker.StringArgs)
         {
@@ -37,12 +37,21 @@ class Program
         
         Console.WriteLine("");
         Console.WriteLine(" ================================= ENV CHECK ================================= ");
+        Console.WriteLine("TODO: EnvChecker function needs to be prettier");
         var envChecker = new EnvChecker();
         List<string> extractedStrings = envChecker.extractEnvValue(walker.StringArgs, filePath);
         foreach (string extraction in extractedStrings)
         {
-            Console.WriteLine(extraction); //Check resultaterne
+            Console.WriteLine("Extracted string: {0}", extraction); //Check resultaterne
         }
+
+        Dictionary<int, string> locationIndexes = envChecker.extractLeakLocation(walker.StringArgs, filePath);
+       foreach(var (index, file) in locationIndexes)
+        {
+            Console.WriteLine("Possible leak detected in {0} on line {1}", file, index);
+        }
+
+
 
         Console.WriteLine("");
         Console.WriteLine(" ================================== ENTROPY ================================== ");
@@ -50,7 +59,7 @@ class Program
         foreach (string extraction in extractedStrings)
         {
             double entropy = secretsVerifier.ShannonEntropy(extraction);
-            Console.WriteLine("Entropy of \""+extraction+ "\":            " + entropy);
+            Console.WriteLine("Entropy of \""+extraction+ "\": " + entropy + "Looks like hex: " + secretsVerifier.isItHex(extraction) + " Looks like base 64: " + secretsVerifier.isItBase64(extraction));
         }
         
         Console.WriteLine("");
@@ -88,13 +97,27 @@ class Program
         double e15 = secretsVerifier.ShannonEntropy("v5PkYJ0atm3iKr9aiWgFJYmpuwhsti48AmdyxKykzsM");
         Console.WriteLine("Entropy of \" v5PkYJ0atm3iKr9aiWgFJYmpuwhsti48AmdyxKykzsM\":                 " + e15);
         double e16 = secretsVerifier.ShannonEntropy("YXZhaWxhYmxldGlyZWRldmVudHRhbGVzcmVndWxhcnByb2R1Y2VlbGV2ZW5zdGFydGM");
-        Console.WriteLine("Entropy of \"YXZhaWxhYmxldGlyZWRldmVudHRhbGVzcmVndWxhcnByb2R1Y2VlbGV2ZW5zdGFydGM \":            " + e16);
+        Console.WriteLine("Entropy of \"YXZhaWxhYmxldGlyZWRldmVudHRhbGVzcmVndWxhcnByb2R1Y2VlbGV2ZW5zdGFydGM \":   " + e16);
         double e17 = secretsVerifier.ShannonEntropy("ec820703bf716f1bf64a2e54199395ed");
         Console.WriteLine("Entropy of \"ec820703bf716f1bf64a2e54199395ed\":                             " + e17);
         double e18 = secretsVerifier.ShannonEntropy("copenhagen");
         Console.WriteLine("Entropy of \"copenhagen\":                                                   " + e18);
         double e19 = secretsVerifier.ShannonEntropy("3141592653589793238462643383279");
         Console.WriteLine("Entropy of \"3141592653589793238462643383279\":                              " + e19);
+        double e20 = secretsVerifier.ShannonEntropy("sk_live_3hmB4s6o0a62C7vrsK00sBJPb3z4CzY9GSEz1dfMtloMec9LpD949IbDPwbeW");
+        Console.WriteLine("Entropy of \"sk_live_3hmB4s6o0a62C7vrsK00sBJPb3z4CzY9GSEz1dfMtloMec9LpD949IbDPwbeW\":  " + e20);       
+        
+        Console.WriteLine("");
+        List<string> randomwords = new List<string>() {"oranges", "google", "traffic light", "cykel", "random", "ApiKeys", "Cryptography", "durumrulle", "laptopskærm", "entropy", "ARGGHHHHHH", "pneumonoultramicroscopicsilicovolcanoconiosis", "Antidisestablishmentarianism", "kat", "Champ", "Titin", "Aegilops", "Champichamp", "DemonChild", "Bæstet"};
+        foreach(string str in randomwords)
+        {
+            double ent = secretsVerifier.ShannonEntropy(str);
+            // if (ent>3) // Hardcoded for now bc, why not
+            // {
+                Console.WriteLine(str + ": " + ent + "LOOKS LIKE HEX: " + secretsVerifier.isItHex(str) + " LOOKS LIKE BASE64: " + secretsVerifier.isItBase64(str));
+            // }
+            // Console.WriteLine(str + ": " + ent);
+        }
 
         //For printing each AST
         // foreach (SyntaxTree tree in trees)

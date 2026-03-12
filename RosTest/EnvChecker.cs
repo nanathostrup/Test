@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -13,7 +14,7 @@ class EnvChecker
             //is it present in the envfiles?
                 //if so - extract the suffix in the file
 
-        var EnvFiles = Directory.EnumerateFiles(filePath, "*", SearchOption.AllDirectories) //Ryk ind i envChecker?
+        var EnvFiles = Directory.EnumerateFiles(filePath, "*", SearchOption.AllDirectories)
             .Where(f =>
                 f.Contains(@".env")
             );
@@ -24,14 +25,13 @@ class EnvChecker
             Console.WriteLine("     " + envfile);
         }
 
-
         //OPTIMIZE!!!!!!!!!!
         List<string> results = new List<string>();
         List<string> temp = new List<string>();
 
         foreach (var envfile in EnvFiles) //Can be optimized.
         {
-            foreach (var stringArg in StringArgs)
+            foreach (var stringArg in StringArgs) //!!
             {
                 var result = (from line in File.ReadLines(envfile)
                     where line.Contains(stringArg)
@@ -49,16 +49,47 @@ class EnvChecker
             if (result.StartsWith(' '))
             {
                 string newstr = result.Remove(0,1);
-                temp.Add(newstr);            }
+                temp.Add(newstr);            
+            }
             else
             {
                 temp.Add(result);
             }
         }
-        foreach(var t in temp)
-        {
-            Console.WriteLine(t);
-        }
         return temp;
+    }
+
+    public Dictionary<int, string> extractLeakLocation(List<string> StringArgs, string filePath) //
+    {
+        var EnvFiles = Directory.EnumerateFiles(filePath, "*", SearchOption.AllDirectories)
+            .Where(f =>
+                f.Contains(@".env")
+            );
+
+        Console.WriteLine("Env files found in directory"); //Just to make life easier we print what we check 
+        foreach (var envfile in EnvFiles)
+        {
+            Console.WriteLine("     " + envfile);
+        }
+        Dictionary<int, string> dict = new Dictionary<int, string>();
+        List <int> locationIndexes = new List<int>();
+        foreach (var envfile in EnvFiles) //Can VERY MUCH be optimized.
+        {
+            foreach (var stringArg in StringArgs)
+            {
+                string[] arrLine = File.ReadAllLines(envfile);
+                // int i = 0;
+                for (int i = 0; i< arrLine.Length; i++)
+                {
+                    if (arrLine[i].Contains(stringArg))
+                    {
+                        locationIndexes.Add(i);
+                        dict.Add(i+1, envfile);
+                    }
+                }
+            }
+        }
+        return dict;
+
     }
 }
