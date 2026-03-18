@@ -9,6 +9,20 @@ using Project.SecretDetection.Secrets;
 namespace Project.SecretDetection{
     public class SecretDetector
     {
+        //   public struct environmentVariables
+        //     {
+        //         public environmentVariables(int index, string envfile, string secret)
+        //         {
+        //             index = index;
+        //             envfile = envfile;
+        //             secret = secret;
+        //         }
+
+        //         public int index { get; set;}
+        //         public string envfile { get; set;}
+        //         public string secret {get; set;}
+
+        //     }
         public void Detect(string filePath)
         {
             // foreach file
@@ -18,7 +32,7 @@ namespace Project.SecretDetection{
             //     if something accesses env file
             //         check that variable in cs file in env file
             //             is it a string litteral?
-            
+
             Console.WriteLine("");
             Console.WriteLine(" ============================= CONVERTING TO AST ============================= ");
             var ast = new AST();
@@ -39,45 +53,27 @@ namespace Project.SecretDetection{
             
             Console.WriteLine("");
             Console.WriteLine(" ================================= ENV CHECK ================================= ");
-            List<string> usedEnvironmentVariables = new List<string>();
-            List<string> unusedEnvironmentVariables = new List<string>();
             var envChecker =  new EnvChecker();
+            List<EnvChecker.EnvironmentVariable> unusedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
+            List<EnvChecker.EnvironmentVariable> usedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
             unusedEnvironmentVariables = envChecker.getUnusedEnvVariables(walker.StringArgs, filePath);
-            Console.WriteLine("");
             usedEnvironmentVariables = envChecker.getUsedEnvVariables(walker.StringArgs, filePath);
             
+            Console.WriteLine("");
+            foreach(var unusedEnvironmentVariable in unusedEnvironmentVariables)
+            {
+                Console.WriteLine("UNUSED ENVIRONMENT VARIABLE FOUND IN FILE: {0}, ON LINE {1}. SECRET: {2}", 
+                unusedEnvironmentVariable.envfile, unusedEnvironmentVariable.index, unusedEnvironmentVariable.secret);
+            }
+            foreach(var usedEnvironmentVariable in usedEnvironmentVariables)
+            {
+                Console.WriteLine("UDED ENVIRONMENT VARIABLE FOUND IN FILE: {0}, ON LINE {1}. SECRET: {2}", 
+                usedEnvironmentVariable.envfile, usedEnvironmentVariable.index, usedEnvironmentVariable.secret);
+            }
+
             string path = Path.Combine(Directory.GetCurrentDirectory(), "Report.txt"); //Create the output log
             path = Path.GetFullPath(path);
             FileStream outputLog = File.Create(path); 
-            
-            Console.WriteLine("");
-            foreach (var use in usedEnvironmentVariables) // Print for at checke
-            {
-                Console.WriteLine("USED VARIABLE:       {0}", use);
-            }
-
-            foreach (var unuse in unusedEnvironmentVariables)
-            {
-                Console.WriteLine("UNUSED VARIABLE:      {0}", unuse);
-            }
-
-            // Console.WriteLine("");
-            // Console.WriteLine(" ================================= ENV CHECK ================================= ");
-            // Console.WriteLine("TODO: EnvChecker function needs to be prettier");
-            // var envChecker = new EnvChecker();
-            // List<string> extractedStrings = envChecker.extractEnvValue(walker.StringArgs, filePath);
-            // foreach (string extraction in extractedStrings)
-            // {
-            //     Console.WriteLine("Extracted string: {0}", extraction); //Check resultaterne
-            // }
-
-            // Console.WriteLine("");
-            // Console.WriteLine("Locations of leaks");
-            // Dictionary<int, string> locationIndexes = envChecker.extractLeakLocation(walker.StringArgs, filePath);
-            // foreach(var (index, file) in locationIndexes)
-            // {
-            //     Console.WriteLine("Possible leak detected in {0} on line {1}", file, index);
-            // }
 
             // Console.WriteLine("");
             // Console.WriteLine(" ================================== ENTROPY ================================== ");

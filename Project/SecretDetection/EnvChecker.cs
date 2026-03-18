@@ -9,9 +9,23 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection{
     class EnvChecker
     {
-        public List<string> getUnusedEnvVariables(List<string> StringArgs, string filePath) //OPTIMIZE!!!
+        public struct EnvironmentVariable
+            {
+                public int index { get; set;}
+                public string envfile { get; set;}
+                public string secret {get; set;}
+                public EnvironmentVariable(int index, string envfile, string secret)
+                {
+                    this.index = index;
+                    this.envfile = envfile;
+                    this.secret = secret;
+                } 
+            }
+            //RETURN A LIST OF ENVIRONMENT VARIABLES
+        public List<EnvironmentVariable> getUnusedEnvVariables(List<string> StringArgs, string filePath) //OPTIMIZE!!!
         {
-            List<string> unusedEnvironmentVariables = new List<string>();
+            List<EnvironmentVariable> unusedEnvironmentVariables = new List<EnvironmentVariable>();
+            // List<string> unusedEnvironmentVariables = new List<string>();
             bool used = false;
 
             var EnvFiles = Directory.EnumerateFiles(filePath, "*", SearchOption.AllDirectories)
@@ -46,9 +60,12 @@ namespace Project.SecretDetection{
                         // unusedEnvironmentVariables.Add(line); //Hele linjen in envfilen
                         string extractedStr = extractString(line); //Kun selve valuen
                         int locationIndex = i;//Lokationen i env filen
-                        Console.WriteLine("FOUND ON : line " + locationIndex); 
-                        Console.WriteLine("IN FILE: " + envfile);
-                        unusedEnvironmentVariables.Add(extractedStr);
+                        // Console.WriteLine("FOUND ON : line " + locationIndex); 
+                        // Console.WriteLine("IN FILE: " + envfile);
+                        // unusedEnvironmentVariables.Add(extractedStr);
+                        
+                        var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr);
+                        unusedEnvironmentVariables.Add(envVar);
                     }
                 }
             }
@@ -56,9 +73,9 @@ namespace Project.SecretDetection{
         }
 
 
-        public List<string> getUsedEnvVariables(List<string> StringArgs, string filePath) //OPTIMIZE!!!
+        public List<EnvironmentVariable> getUsedEnvVariables(List<string> StringArgs, string filePath) //OPTIMIZE!!!
         {
-            List<string> usedEnvironmentVariables = new List<string>();
+            List<EnvironmentVariable> usedEnvironmentVariables = new List<EnvironmentVariable>();
 
             var EnvFiles = Directory.EnumerateFiles(filePath, "*", SearchOption.AllDirectories)
                 .Where(f =>
@@ -84,10 +101,14 @@ namespace Project.SecretDetection{
                         {
                             // usedEnvironmentVariables.Add(line); //Hele linjen in envfilen
                             string extractedStr = extractString(line); //Kun selve valuen
-                            int locationIndex = i; //Lokationen i env filen
-                            Console.WriteLine("FOUND ON : line " + locationIndex); 
-                            Console.WriteLine("IN FILE: " + envfile);
-                            usedEnvironmentVariables.Add(extractedStr);
+                            int locationIndex = i; //Lokationen i env filen - burde måske være sin egen funtion men det her er så meget nemmere:)))
+                            // Console.WriteLine("FOUND ON : line " + locationIndex); 
+                            // Console.WriteLine("IN FILE: " + envfile);
+                            // envVar = new Env
+                            // usedEnvironmentVariables.Add(extractedStr);
+
+                            var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr);
+                            usedEnvironmentVariables.Add(envVar);
                         }
                     }
                 }
@@ -103,19 +124,19 @@ namespace Project.SecretDetection{
                 if (extractedString.StartsWith(' '))
                 {
                     string newExtractedString = extractedString.Split(' ')[1];
-                    Console.WriteLine("EXTRACTED STRING:{0}", newExtractedString);
+                    // Console.WriteLine("EXTRACTED STRING:{0}", newExtractedString);
                     return newExtractedString;
                 }
                 else
                 {
-                    Console.WriteLine("EXTRACTED STRING:{0}", extractedString);
+                    // Console.WriteLine("EXTRACTED STRING:{0}", extractedString);
                     return extractedString;
                 }
             }
             catch
             {
-                Console.WriteLine("We catching");
-                Console.WriteLine("EXTRACTED STRING:{0}", envVariables);
+                // Console.WriteLine("We catching");
+                // Console.WriteLine("EXTRACTED STRING:{0}", envVariables);
                 return envVariables;
             }
         }
