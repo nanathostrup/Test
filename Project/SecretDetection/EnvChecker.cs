@@ -52,7 +52,6 @@ namespace Project.SecretDetection{
                     }
                 }
             }
-            // extractString(unusedEnvironmentVariables);
             return unusedEnvironmentVariables;
         }
 
@@ -93,7 +92,6 @@ namespace Project.SecretDetection{
                     }
                 }
             }
-            
             return usedEnvironmentVariables;
         }
         
