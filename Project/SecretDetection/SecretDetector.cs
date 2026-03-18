@@ -9,20 +9,6 @@ using Project.SecretDetection.Secrets;
 namespace Project.SecretDetection{
     public class SecretDetector
     {
-        //   public struct environmentVariables
-        //     {
-        //         public environmentVariables(int index, string envfile, string secret)
-        //         {
-        //             index = index;
-        //             envfile = envfile;
-        //             secret = secret;
-        //         }
-
-        //         public int index { get; set;}
-        //         public string envfile { get; set;}
-        //         public string secret {get; set;}
-
-        //     }
         public void Detect(string filePath)
         {
             // foreach file
@@ -75,19 +61,33 @@ namespace Project.SecretDetection{
             path = Path.GetFullPath(path);
             FileStream outputLog = File.Create(path); 
 
-            // Console.WriteLine("");
-            // Console.WriteLine(" ================================== ENTROPY ================================== ");
-            // var secretsVerifier = new SecretsVerifier();
-            // foreach (string extraction in extractedStrings)
-            // {
-            //     double entropy = secretsVerifier.ShannonEntropy(extraction);
-            //     Console.WriteLine("Entropy of \""+extraction+ "\": " + entropy + "Looks like hex: " + secretsVerifier.isItHex(extraction) + " Looks like base 64: " + secretsVerifier.isItBase64(extraction));
-            // }
+            Console.WriteLine("");
+            Console.WriteLine(" ============================== SECRET ANALYSIS ============================== ");
+            var entropyDetector = new EntropyDetector();
+            var hexDetector = new HexDetector();
+            var base64Detector = new Base64Detector();
 
-            // // For some tests of entropy, hex, base64...
-            // var tester = new Tester();
-            // tester.EntropyTester();
+            foreach(var usedEnvVar in usedEnvironmentVariables)
+            {
+                int entVal = entropyDetector.detect(usedEnvVar.secret);
+                Console.WriteLine("Measured entropy for string {0}: {1}", usedEnvVar.secret, entVal);
+                
+                int hexVal = hexDetector.detect(usedEnvVar.secret);
+                Console.WriteLine("Does this string look like hex? {0}: {1}", usedEnvVar.secret, hexVal);
 
+                int baseVal = base64Detector.detect(usedEnvVar.secret);
+                Console.WriteLine("Does this string look like base64? {0}: {1}", usedEnvVar.secret, baseVal);
+                Console.WriteLine("");
+            }
+
+
+
+
+
+
+
+            // IIIFFF looks like hex && ! looks like word = score +++++++
+            
             //For printing each AST
             // foreach (SyntaxTree tree in trees)
             // {
