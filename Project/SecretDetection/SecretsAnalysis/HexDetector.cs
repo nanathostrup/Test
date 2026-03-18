@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
-namespace Project.SecretDetection.Secrets{
+namespace Project.SecretDetection.SecretsAnalysis{
     public class HexDetector : Detector
     {
         public int score;
@@ -25,7 +25,7 @@ namespace Project.SecretDetection.Secrets{
         public bool isItHex(string secret)
         {
             List<char> validChars = new List<char>() {'a','b','c','d','e','f','0','1','2','3','4','5','6','7','8','9', 'A', 'B','C','D','E','F'}; //Could probably be done smarter
-            //Check if each char in str is from 0-9 or a-f --MANGLER A-F??
+            //Check if each char in str is from 0-9 or a-f or A-F
             foreach (char ch in secret)
             {
                 if (!validChars.Contains(ch))

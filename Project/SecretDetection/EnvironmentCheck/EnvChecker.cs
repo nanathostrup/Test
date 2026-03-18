@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
-namespace Project.SecretDetection{
+namespace Project.SecretDetection.EnvironmentChecking{
     class EnvChecker
     {
         public struct EnvironmentVariable

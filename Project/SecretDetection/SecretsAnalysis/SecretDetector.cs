@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
-namespace Project.SecretDetection.Secrets{
+namespace Project.SecretDetection.SecretsAnalysis{
     public abstract class Detector
     {
         public int score {get; set;}
