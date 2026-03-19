@@ -30,6 +30,7 @@ namespace WeatherStation
         private const string heltvildtsejtvejApiKey2 = "sk_live_skfikf5682lfjas896dsndhfuek9hy654";         //API - keyboard smashing
         private const string StripeServer = "sk_t3st_4RxUm8rtZ0phcTFLbHvkTJD5";                             //API - found as an example here (modified e = 3): https://docs.stripe.com/keys
         private const string StripeClient = "pk_t3st_4RxUQ9rE2xn8vIbplcQlCLQN";                             //API - (pk=public key) found as an example here (modified e = 3): https://docs.stripe.com/keys
+        private const string Stripe = "sk_live_3hmB4s6o0a62C7vrsK00sBJPb3z4CzY9GSEz1dfMtloMec9LpD949IbDPwbeW"; //API - found here https://blog.gitguardian.com/secrets-in-source-code-episode-3-3-building-reliable-secrets-detection/
         // GITHUB
         private const string GitHubClassic = "ghp_abcdefghijklmnopqrstuvwxyz123456";                        //ACCESS TOKEN
         private const string GitHubFineGrained = "github_pat_11ABCDEF1234567890FAK3";                       //ACCESS TOKEN
@@ -53,6 +54,8 @@ namespace WeatherStation
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
             "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFkbWluIn0." +
             "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
+        private const string JWTsecretRealistic =                                                             //JWT - copy pasted fra eksempel der kommer med i: https://www.jwt.io/  
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30";
         private const string JwtSigning = "WOlJeDRXzIDR9N0xXrQjIOYNoMYrlEvMz3HF91RTy";                      //SIGNING SECRET generated here: https://jwtsecretkeygenerator.com/
         private const string JwtSigningSecret = "WOlJeDRXzIDR9N0xXrQjIOYNoMYrlEvMz3HF91RTy";                //sIGNING SECRET (same secret as above but different variable name, with "secret" in name)
 
