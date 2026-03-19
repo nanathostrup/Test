@@ -14,7 +14,7 @@ namespace Project.SecretDetection.Semantics{
             //Does the invocation have a child that is GetEnvVar?
                 //No? Return
                 //Yes 
-                    //get invocation's argumentList and add the string litteral (which is an argument) to a list
+                    //get invocation's argumentList and add the string litteral (which is an argument to GetEnvVar) to a list
 
             bool GetEnvVar = invocation.DescendantTokens()
                     .Any(t => t.IsKind(SyntaxKind.IdentifierToken) 

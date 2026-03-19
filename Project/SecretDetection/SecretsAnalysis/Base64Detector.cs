@@ -24,7 +24,13 @@ namespace Project.SecretDetection.SecretsAnalysis{
         {
             try
             {
-                byte[] data = Convert.FromBase64String(secret);
+                var base64 = secret.Replace('-', '+').Replace('_', '/')
+                    .PadRight(secret.Length + (4 - secret.Length % 4) % 4, '='); //URL safe - vigtig specielt med jwt tokens
+
+                var bytes = Convert.FromBase64String(base64);
+                var decoded = new System.Text.UTF8Encoding(false, true).GetString(bytes); // Tak til chat:)
+                // Console.WriteLine(decoded);
+
                 return true;
             }
             catch

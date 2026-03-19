@@ -11,16 +11,18 @@ namespace Project.SecretDetection.EnvironmentChecking{
     {
         public struct EnvironmentVariable
             {
-                public int index { get; set;}
-                public string envfile { get; set;}
-                public string secret { get; set;}
-                public int score { get; set;}
-                public EnvironmentVariable(int index, string envfile, string secret, int score)
+                public int index { get; set;} //where is it located?
+                public string envfile { get; set;} //where is it located?
+                public string secret { get; set;} //what is the detection "secret"?
+                public int score { get; set;} //how critical a detection is
+                public string comment { get; set;} //what kind of "secret" is it if any?
+                public EnvironmentVariable(int index, string envfile, string secret, int score, string comment)
                 {
                     this.index = index;
                     this.envfile = envfile;
                     this.secret = secret;
                     this.score = score;
+                    this.comment = comment;
                 } 
             }
 
@@ -63,8 +65,9 @@ namespace Project.SecretDetection.EnvironmentChecking{
                         // unusedEnvironmentVariables.Add(line); //Hele linjen in envfilen
                         string extractedStr = extractString(line); //Kun selve valuen
                         int locationIndex = i;//Lokationen i env filen
-                        int score = 0; //Den skal initialiseres her, og opdateres i analysen af stringen                      
-                        var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, score);
+                        int score = 0; //Den skal initialiseres her, og opdateres i analysen af stringen
+                        string comment = ""; //Den skal initialiseres her, og opdateres i analyse delen                      
+                        var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, score, comment);
                         unusedEnvironmentVariables.Add(envVar);
                     }
                 }
@@ -100,8 +103,9 @@ namespace Project.SecretDetection.EnvironmentChecking{
                             // usedEnvironmentVariables.Add(line); //Hele linjen in envfilen
                             string extractedStr = extractString(line); //Kun selve valuen
                             int locationIndex = i; //Lokationen i env filen - burde måske være sin egen funtion men det her er så meget nemmere:)))
-                            int score = 0; //Den skal initialiseres her, og opdateres i analysen af stringen                      
-                            var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, score);
+                            int score = 0; //Den skal initialiseres her, og opdateres i analysen af stringen
+                            string comment = ""; //Den skal initialiseres her, og opdateres i analyse delen                      
+                            var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, score, comment);
                             usedEnvironmentVariables.Add(envVar);
                         }
                     }
