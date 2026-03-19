@@ -6,7 +6,8 @@ namespace WeatherStation
 {
     public class WeatherServices
     {
-        string? apiKey = Environment.GetEnvironmentVariable("MY_API_KEY"); // Hardcoded API key in env file
+        string? apiKey = Environment.GetEnvironmentVariable("MY_API_KEY"); // Hardcoded API key in env file - modified real api key from Open weather
+        string? apiKey1 = Environment.GetEnvironmentVariable("JWT_SECRET"); // Hardcoded API key in env file - real(ish) jwt used as example in official debugger page: https://www.jwt.io/
         string? defaultCity = Environment.GetEnvironmentVariable("WEATHER_DEFAULT_CITY"); // Non-secret - Test to differntiate between actual secret and non secret
 
         private readonly HttpClient _httpClient = new HttpClient();
@@ -14,7 +15,7 @@ namespace WeatherStation
         {
             city ??= defaultCity;
             string url =
-             $"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={apiKey}&units=metric"; // Actually working website fetching weather forecast
+             $"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={apiKey1}&units=metric"; // Actually working website fetching weather forecast
             try
             {
                 var response = await _httpClient.GetStringAsync(url);
