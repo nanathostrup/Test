@@ -17,7 +17,18 @@ namespace Project.SecretDetection.SecretsAnalysis{
             entropy = Math.Round(entropy);
             int convetedEntropy = Convert.ToInt32(entropy);
             
-            if (convetedEntropy > 3) // Vilkårlig threshhold, som skal kunne ændres senere hen
+            // Console.WriteLine("Measured entropy of {0} was {1}", secret, ShannonEntropy(secret));
+            
+            //Evt lav til switch case
+            // if (convetedEntropy > 5) // eks på mulig expansion in the future - men out of scope here
+            // {
+            //     return 100000;
+            // }
+            // else if (convetedEntropy>4)
+            // {
+            //     return 100;
+            // }
+            if (convetedEntropy > 3)// Vilkårlig threshhold, som skal kunne ændres senere hen
             {
                 return 1;
             }

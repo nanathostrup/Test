@@ -62,23 +62,38 @@ namespace Project.SecretDetection{
             Console.WriteLine("");
             Console.WriteLine(" ============================== SECRET ANALYSIS ============================== ");
             var entropyDetector = new EntropyDetector();
-            var hexDetector = new HexDetector();
-            var base64Detector = new Base64Detector();
+            // var hexDetector = new HexDetector();
+            // var base64Detector = new Base64Detector();
 
-            foreach(var usedEnvVar in usedEnvironmentVariables)
-            {
-                int entVal = entropyDetector.detect(usedEnvVar.secret);
-                Console.WriteLine("Measured entropy for string {0}: {1}", usedEnvVar.secret, entVal);
-                
-                int hexVal = hexDetector.detect(usedEnvVar.secret);
-                Console.WriteLine("Does this string look like hex? {0}: {1}", usedEnvVar.secret, hexVal);
+            var apikeyDetector = new APIKeyDetector();
+            apikeyDetector.detect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30");
 
-                int baseVal = base64Detector.detect(usedEnvVar.secret);
-                Console.WriteLine("Does this string look like base64? {0}: {1}", usedEnvVar.secret, baseVal);
-                Console.WriteLine("");
-            }
 
+
+            // var envScorer = new EnvScorer();
+            // envScorer.giveScore(usedEnvironmentVariables);
             // Console.WriteLine("");
+            // envScorer.giveScore(unusedEnvironmentVariables);
+
+
+            // Console.WriteLine(" ############ TEST ############ ");
+            // List<string> randomwords = new List<string>() {"oranges", "google", "traffic light", "cykel", "random", "ApiKeys", "Cryptography", "durumrulle", "laptopskærm", "entropy", "ARGGHHHHHH", "pneumonoultramicroscopicsilicovolcanoconiosis", "Antidisestablishmentarianism", "kat", "Champ", "Titin", "Aegilops", "Champichamp", "DemonChild", "Bæstet"};
+            // foreach(string rand in randomwords)
+            // {
+            //     int val = entropyDetector.detect(rand);
+            //     Console.WriteLine("Measured entropy for string {0}: {1}", rand, val);
+            // }
+            // Console.WriteLine(" ############ TEST ############ ");
+            // List<string> secretsIsh = new List<string>() {"ea413b8c6e9657e69c24ca2b83e6d895", "password", "api_XweVmYIoqSCHxVOb4Q6C1zMFs0O92zPu", "AKIAIOSFODNN73XAMPL3", "wJalrXUtnFEMI/K7MDENG/bPxRfiCY3XAMPL3K3Y", "IQoJb3JpZ2luX2VjEFAaCXVzLXdlc3QtMiJIMEYCIQDFAK3", "AIzaSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe", "sk_live_C8YfyXfzocnRZNE36yzd7Pg3Wl0aqCad", "sk_live_skfikf5682lfjas896dsndhfuek9hy654", "pk_t3st_4RxUQ9rE2xn8vIbplcQlCLQN", "sk_live_3hmB4s6o0a62C7vrsK00sBJPb3z4CzY9GSEz1dfMtloMec9LpD949IbDPwbeW", "ghp_abcdefghijklmnopqrstuvwxyz123456", "github_pat_11ABCDEF1234567890FAK3", "glpat-abcdefghijklmnopqrstuvwxyz", "123456789:AAFAK3-telegram-bot-token-3xampl3", "your_auth_token_32charslong", "SG.fak3_sendgrid_api_k3y_3xampl3", "SuperLongJWTSigningSecretK3y123456789", "WOlJeDRXzIDR9N0xXrQjIOYNoMYrlEvMz3HF91RTy", "YXZhaWxhYmxldGlyZWRldmVudHRhbGVzcmVndWxhcnByb2R1Y2VlbGV2ZW5zdGFydGM", "ec820703bf716f1bf64a2e54199395ed"};
+            // foreach(string str in secretsIsh)
+            // {
+            //     int val = entropyDetector.detect(str);
+            //     Console.WriteLine("Measured entropy for string {0}: {1}", str, val);
+            // }
+
+
+
+            Console.WriteLine("");
             Console.WriteLine(" ================================== REPORT =================================== ");
             string logpath = Path.Combine(Directory.GetCurrentDirectory(), "Report.txt"); //Create the output log
             logpath = Path.GetFullPath(logpath);
@@ -87,14 +102,16 @@ namespace Project.SecretDetection{
             {
                 foreach (var usedEnvVar in usedEnvironmentVariables)
                 {
-                    writer.WriteLine("An environment variable is used in file {0} on line {1} and has a score of INPLEMENT LOGIC FOR SCORING SYSTEM", usedEnvVar.envfile, usedEnvVar.index);
+                    writer.WriteLine("An environment variable is used in file {0} on line {1} and has a score of {2}", usedEnvVar.envfile, usedEnvVar.index, usedEnvVar.score);
                 }
                 foreach (var unusedEnvVar in unusedEnvironmentVariables)
                 {
-                    writer.WriteLine("An unused environment variable is detected in file {0} on line {1} and has a score of INPLEMENT LOGIC FOR SCORING SYSTEM", unusedEnvVar.envfile, unusedEnvVar.index);
+                    writer.WriteLine("An unused environment variable is detected in file {0} on line {1} and has a score of {2}", unusedEnvVar.envfile, unusedEnvVar.index, unusedEnvVar.score);
                 }
             }
             Console.WriteLine("A report has been made in {0}", logpath);
+
+
 
             // IIIFFF looks like hex && ! looks like word = score +++++++
                 // Til scoring system

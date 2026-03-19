@@ -15,7 +15,9 @@ namespace Project.SecretDetection.SecretsAnalysis{
         {
             return 0; // Brug evt. den her: https://github.com/loresoft/NetSpell
                       // Skal researches først
-                      // Eksempel brug af NetSpell: https://stackoverflow.com/questions/38416265/c-sharp-checking-if-a-word-is-in-an-english-dictionary
+                      // Eksempel brug af NetSpell: https://stackoverflow.com/questions/38416265/c-sharp-checking-if-a-word-is-in-an-english-dictionary 
+        
+            //Tag hensyn til at der kan være flere ord i en string input e.g. den i test env filen.
         }
     }
 }

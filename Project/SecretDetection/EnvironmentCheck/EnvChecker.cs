@@ -13,12 +13,14 @@ namespace Project.SecretDetection.EnvironmentChecking{
             {
                 public int index { get; set;}
                 public string envfile { get; set;}
-                public string secret {get; set;}
-                public EnvironmentVariable(int index, string envfile, string secret)
+                public string secret { get; set;}
+                public int score { get; set;}
+                public EnvironmentVariable(int index, string envfile, string secret, int score)
                 {
                     this.index = index;
                     this.envfile = envfile;
                     this.secret = secret;
+                    this.score = score;
                 } 
             }
 
@@ -29,7 +31,6 @@ namespace Project.SecretDetection.EnvironmentChecking{
                     //if so - extract the suffix in the file
             
             List<EnvironmentVariable> unusedEnvironmentVariables = new List<EnvironmentVariable>();
-            // List<string> unusedEnvironmentVariables = new List<string>();
             bool used = false;
 
             var EnvFiles = Directory.EnumerateFiles(filePath, "*", SearchOption.AllDirectories)
@@ -41,8 +42,6 @@ namespace Project.SecretDetection.EnvironmentChecking{
             {
                 Console.WriteLine("     " + envfile);
             }
-
-            //Maybe redo such that we get more info, e.g. line number and what file the error so it can be added to the end report
 
             foreach (var envfile in EnvFiles)
             {
@@ -64,10 +63,8 @@ namespace Project.SecretDetection.EnvironmentChecking{
                         // unusedEnvironmentVariables.Add(line); //Hele linjen in envfilen
                         string extractedStr = extractString(line); //Kun selve valuen
                         int locationIndex = i;//Lokationen i env filen
-                        // Console.WriteLine("FOUND ON : line " + locationIndex); 
-                        // Console.WriteLine("IN FILE: " + envfile);
-                        
-                        var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr);
+                        int score = 0; //Den skal initialiseres her, og opdateres i analysen af stringen                      
+                        var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, score);
                         unusedEnvironmentVariables.Add(envVar);
                     }
                 }
@@ -90,8 +87,6 @@ namespace Project.SecretDetection.EnvironmentChecking{
                 Console.WriteLine("     " + envfile);
             }
 
-            //Maybe redo such that we get more info, e.g. line number and what file the error so it can be added to the end report
-
             foreach (var envfile in EnvFiles)
             {
                 int i = 0; //create an index counter so we can track the location in the env file and can write this to the report
@@ -105,10 +100,8 @@ namespace Project.SecretDetection.EnvironmentChecking{
                             // usedEnvironmentVariables.Add(line); //Hele linjen in envfilen
                             string extractedStr = extractString(line); //Kun selve valuen
                             int locationIndex = i; //Lokationen i env filen - burde måske være sin egen funtion men det her er så meget nemmere:)))
-                            // Console.WriteLine("FOUND ON : line " + locationIndex); 
-                            // Console.WriteLine("IN FILE: " + envfile);
-
-                            var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr);
+                            int score = 0; //Den skal initialiseres her, og opdateres i analysen af stringen                      
+                            var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, score);
                             usedEnvironmentVariables.Add(envVar);
                         }
                     }
@@ -117,7 +110,7 @@ namespace Project.SecretDetection.EnvironmentChecking{
             return usedEnvironmentVariables;
         }
         
-        public string extractString(string envVariables) // Giver dig din string uden = og uden mellemrummet. Hvis ikke "= " passer så får man bare alt andet.
+        public string extractString(string envVariables) // Giver dig din string uden = og uden mellemrummet. Hvis ikke "= " passer så får man bare alt.
         {
             try
             {
@@ -129,14 +122,11 @@ namespace Project.SecretDetection.EnvironmentChecking{
                 }
                 else
                 {
-                    // Console.WriteLine("EXTRACTED STRING:{0}", extractedString);
                     return extractedString;
                 }
             }
             catch
             {
-                // Console.WriteLine("We catching");
-                // Console.WriteLine("EXTRACTED STRING:{0}", envVariables);
                 return envVariables;
             }
         }

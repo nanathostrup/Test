@@ -1,5 +1,6 @@
-An environment variable is used in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherSimple.env on line 1 and has a score of INPLEMENT LOGIC FOR SCORING SYSTEM
-An environment variable is used in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherSimple.env on line 3 and has a score of INPLEMENT LOGIC FOR SCORING SYSTEM
-An unused environment variable is detected in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\test.env on line 1 and has a score of INPLEMENT LOGIC FOR SCORING SYSTEM
-An unused environment variable is detected in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherSimple.env on line 2 and has a score of INPLEMENT LOGIC FOR SCORING SYSTEM
-An unused environment variable is detected in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherSimple.env on line 4 and has a score of INPLEMENT LOGIC FOR SCORING SYSTEM
+An environment variable is used in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherSimple.env on line 1 and has a score of 0
+An environment variable is used in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherSimple.env on line 3 and has a score of 0
+An environment variable is used in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherSimple.env on line 5 and has a score of 0
+An unused environment variable is detected in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\test.env on line 1 and has a score of 0
+An unused environment variable is detected in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherSimple.env on line 2 and has a score of 0
+An unused environment variable is detected in file C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple\Services\WeatherSimple.env on line 4 and has a score of 0
