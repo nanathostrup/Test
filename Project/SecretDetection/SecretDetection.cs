@@ -92,7 +92,7 @@ namespace Project.SecretDetection{
 
 
             Console.WriteLine("");
-            Console.WriteLine(" ================================== REPORT =================================== ");
+            Console.WriteLine(" ================================== REPORT =================================== ");            
             string logpath = Path.Combine(Directory.GetCurrentDirectory(), "Report.txt"); //Create the output log
             logpath = Path.GetFullPath(logpath);
 
@@ -109,7 +109,16 @@ namespace Project.SecretDetection{
             }
             Console.WriteLine("A report has been made in {0} \n", logpath);
 
-            
+
+
+            Console.WriteLine("");
+            Console.WriteLine(" ============================ DATA FLOW ANALYSIS ============================= ");
+            var dataflow = new DataFlowAnalyzer();
+            // for(int i = 0; i < 1; i++)
+            foreach(var tree in trees)
+            {
+                dataflow.dataFlowAnalysis(tree);
+            }
             //For printing each AST
             // foreach (SyntaxTree tree in trees)
             // {
