@@ -20,8 +20,8 @@ namespace Project.SecretDetection.Semantics{
 
                 var semanticModel = compilation.GetSemanticModel(tree); //make semantic model using compilation and syntax tree
                 SyntaxNode root = tree.GetRoot();   
-                //make a method - not sure what exactly this does         
-                var method = root.DescendantNodes()
+                    
+                var method = root.DescendantNodes() //make a method - not sure what exactly this does 
                     .OfType<MethodDeclarationSyntax>()
                     .First();
                 
@@ -30,13 +30,14 @@ namespace Project.SecretDetection.Semantics{
                 if (dataFlow.Succeeded)
                 {
                     Console.WriteLine("Dataflow analysis succeeded :)");
-                    Console.WriteLine(dataFlow.DataFlowsIn.Length);
-                    // foreach (var location in dataFlow.UsedLocalFunctions)
-                    // {
-                    //     Console.WriteLine(":)");
-                    //     Console.WriteLine(location);
-                    // }
-                    Console.WriteLine("YAyyy");
+                    Console.WriteLine("Length: " + dataFlow.ReadOutside.Length);
+                    if (dataFlow.ReadOutside.Length > 0){
+                        foreach (var location in dataFlow.ReadOutside)
+                        {
+                            Console.WriteLine(":O");
+                            Console.WriteLine(location);
+                        }
+                    }
                 }
             }
             catch
