@@ -45,6 +45,28 @@ namespace Project.SecretDetection.Semantics{
                     }
                 }
 
+// IDE FRA CHATTEN:
+// var symbol = semanticModel.GetSymbolInfo(identifier).Symbol;
+// switch (symbol)
+// {
+//     case ILocalSymbol local:
+//         // local variable → use dataflow
+//         break;
+
+//     case IFieldSymbol field:
+//         // class/global variable → go to declaration
+//         break;
+
+//     case IParameterSymbol param:
+//         // method parameter → trace call sites (optional)
+//         break;
+
+//     case IPropertySymbol prop:
+//         // property → analyze getter/setter
+//         break;
+// }
+
+
 
                 // For all variables that are declared
                 // Where are they used? 
