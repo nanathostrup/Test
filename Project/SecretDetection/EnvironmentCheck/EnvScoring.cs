@@ -65,10 +65,10 @@ namespace Project.SecretDetection.EnvironmentChecking{
                         //Return no score
                     //Return no score
 
-                    if(apiVal == 1) //critical
+                    if(apiVal > 0) //critical
                     {
                         var temp = environmentVariables[i];
-                        temp.score +=100000;
+                        temp.score +=apiKeyDetector.score;
                         temp.comment = temp.comment + "This string looks like " + apiKeyDetector.apiType +". " ;
                         environmentVariables[i] = temp; 
                     }
@@ -82,30 +82,31 @@ namespace Project.SecretDetection.EnvironmentChecking{
                     //     {
                     //          return without a detection og slut her.
                     //     }
-                    if (base64Val == 1) //medium detection
+                    if (base64Val > 0) //medium detection
                     {
                         var temp = environmentVariables[i];
-                        temp.score +=5000;
+                        temp.score += base64Detector.score;
                         temp.comment = temp.comment + "This string looks like it is base64 encoded. ";
                         environmentVariables[i] = temp; 
                     }
-                    if (hexVal == 1) //&& Does not look like a word
+                    if (hexVal > 0) //&& Does not look like a word
                     {
-                        if (entVal == 1) // medium detection
+                        if (entVal > 0) // medium detection
                         {
                             var temp = environmentVariables[i];
-                            temp.score +=5000;
+                            temp.score += hexDetector.score;
                             temp.comment = temp.comment + "This string looks like hex and has high entropy. ";
                             environmentVariables[i] = temp; 
                         }
                         //return with no detection
                     }
-                    if(entVal == 1)
+                    else if(entVal > 0)
                     {
                         if (environmentVariables[i].secret.Length > secretLengthBoud) //mild detection
+                                                                    //Ryk evt denne bound ind i entropy detector klassen (det er dens ansvar at give en score)
                         {
                             var temp = environmentVariables[i];
-                            temp.score +=20;
+                            temp.score += entropyDetector.score;
                             temp.comment = temp.comment + "This string is long and has high entropy. ";
                             environmentVariables[i] = temp;
                         }

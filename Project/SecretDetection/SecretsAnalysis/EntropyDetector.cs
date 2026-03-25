@@ -13,6 +13,7 @@ namespace Project.SecretDetection.SecretsAnalysis{
         public int score;
         public override int detect (string secret)
         {
+            score = 0; 
             double entropy = ShannonEntropy(secret);
             entropy = Math.Round(entropy);
             int convetedEntropy = Convert.ToInt32(entropy);
@@ -30,9 +31,11 @@ namespace Project.SecretDetection.SecretsAnalysis{
             // }
             if (convetedEntropy > 3)// Vilkårlig threshhold, som skal kunne ændres senere hen
             {
-                return 1;
+                score =+ 10;
+                // return 1;
             }
-            else return 0;
+            // else return 0;
+            return score;
         }
 
         //This function is a translation of the function here: https://thesagardahal.medium.com/understanding-shannon-entropy-measuring-randomness-for-secure-code-auditing-4b3c5697a7f9

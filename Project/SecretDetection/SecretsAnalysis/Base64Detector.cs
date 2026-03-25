@@ -13,12 +13,15 @@ namespace Project.SecretDetection.SecretsAnalysis{
         public int score;
         public override int detect(string secret)
         {
+            score = 0;
             bool base64 = isItBase64(secret);
             if (base64)
             {
-                return 1;
+                score += 3000;
+                // return 1;
             }
-            else return 0;
+            // else return 0;
+            return score;
         }
         public bool isItBase64(string secret)
         {

@@ -13,13 +13,16 @@ namespace Project.SecretDetection.SecretsAnalysis{
         public int score;
         public override int detect(string secret)
         {
+            score = 0;
             bool hex = isItHex(secret);
 
             if (hex)
             {
-                return 1;
+                score += 200;
+                // return 1;
             }
-            else return 0;
+            // else return 0;
+            return score;
         }
 
         public bool isItHex(string secret)

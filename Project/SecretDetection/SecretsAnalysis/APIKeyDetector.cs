@@ -15,12 +15,14 @@ namespace Project.SecretDetection.SecretsAnalysis{
         public string apiType; 
         public override int detect(string secret)
         {
+            score = 0;
             if (doesItLookLikeAPIKey(secret))
             {
-                return 1;
+                score += 40000;
+                // return 1;
             }
-
-            return 0;
+            return score;
+            // return 0;
         }
 
         public bool doesItLookLikeAPIKey(string secret) 

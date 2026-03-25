@@ -17,8 +17,13 @@ namespace Project.SecretDetection.Semantics{
                         !f.Contains(@"\obj\") 
                         // skip bin folder
                         && !f.Contains(@"\bin\")
+                        // Only look at csharp code files
+                        && f.Contains(@".cs")
+
                         // skip csproj file
                         && !f.Contains(@".csproj")
+                        // // skip sln file
+                        // && !f.Contains(@".sln") // Eller bare tag KUN cs filer? Der kigges ikke på andre filer gennem ast lige nu anyways
                     );
 
             Console.WriteLine("Files being processed into an AST:");//to see what files are being processed, just to make my life easier

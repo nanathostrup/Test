@@ -7,8 +7,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.Semantics{
     class Walker : CSharpSyntaxWalker
     {
-        public List<string> StringArgs = new List<string>(); //Maybe find a better way to do this than a global variable
-
+        public List<string> StringArgs = new List<string>(); //All string argument inputs to GetEnvVar e.g. x = GetEnvVar(y), this list is for the y's - Maybe find a better way to do this than a global variable
+        public List<string> InitializedArgs = new List<string>(); //What the environment variable is initialized as e.g. x = GetEnvVar(y), this list is for the x's 
         public override void VisitInvocationExpression(InvocationExpressionSyntax invocation)
             {
             //Does the invocation have a child that is GetEnvVar?
@@ -29,6 +29,16 @@ namespace Project.SecretDetection.Semantics{
                     .Where(t => t.IsKind(SyntaxKind.StringLiteralExpression))
                     .Select(t => t.Token.ValueText)
                     .ToList();
+
+                
+                //First parent whta is variable declarator,
+                    //Thich child is the name that it is declared as
+                
+                var initializedas = invocation //Now we want what the variable name is initilialized as (so we can tract the variable with dataflow analysis)
+                    .FirstAncestorOrSelf<VariableDeclaratorSyntax>() //Not declaraTION - then we get the entire line which is too much for getting the name its initialized as
+                    .Identifier.Text;
+
+                InitializedArgs.Add(initializedas); //Hvorfor adder jeg til mine global lister på to måder? Genovervej på tidspunkt
 
                 if (arglist.Any())
                 {
