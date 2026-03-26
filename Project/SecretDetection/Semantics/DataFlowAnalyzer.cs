@@ -9,15 +9,17 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.Semantics{
     class DataFlowAnalyzer
     {
-        public void dataFlowAnalysis(List<SyntaxTree> trees, string secret)
+        public void dataFlowAnalysis(List<SyntaxTree> trees, string secret, int counter)//, List<string> alreadyVisitedArea)
         {
             //Dataflow analysis on secret in each method
                 //What is the secret initialized as? = initas
                 //Dataflow analysis on initas
-
-            for (int i = 0; i < trees.Count; i++)
+            if (counter == 1)
             {
-                Console.WriteLine("");
+                return;
+            }
+            for (int i = 2; i < trees.Count; i++)
+            {
                 Console.WriteLine("File nr {0} being conducted a dataflow analysis on", i);
                 var compilation = CSharpCompilation.Create("MyAnalysis")
                         .AddSyntaxTrees(trees[i])
@@ -32,10 +34,76 @@ namespace Project.SecretDetection.Semantics{
                     .OfType<MethodDeclarationSyntax>()
                     // .ToList();
                     .First();
+            
 
                 var identifiers = method.Body.DescendantNodes()
                     .OfType<IdentifierNameSyntax>();
+                
+                var dataFlow = semanticModel.AnalyzeDataFlow(method.Body); //do the actual dataflow analysis on current tree in current method
+                if (dataFlow.Succeeded)
+                {
+                    Console.WriteLine("Data flow analysis succeeded");
+                    var readInside = dataFlow.ReadInside;
+                    // Console.WriteLine("Length: " + readInside.Length);
+                    if (readInside.Length > 0){
+                        foreach (var readinside in readInside)
+                        {
+                            // var symbol = semanticModel.GetSymbolInfo(readinside).Symbol;
+                            // if (symbol != null && symbol.Name != null && symbol.Name.EndsWith(secret))
+                            // {
+                            //     Console.WriteLine("YAY");
+                            // }
+                            // if (true)
+                            // {
+                            //     Console.WriteLine("YES!");
+                            // }
+                            // else
+                            // {
+                                Console.WriteLine("");
+                                Console.WriteLine("variable found: " + readinside);
+                                //invocation expressions kan kalde direkte på en variabel.
+                                    //Kig på argument/identifiername/identifiertoken og compare til secert --- KIG PÅ HÅNDTERING BAGEFTER
+                                                            
+                                //find first parent which is var dec
+                                //get all idtokens inside var dec
+                                //foreach id token 
+                                    //if id token == current readInside value = counter++
+                                    //dataflowAnalysis(trees, idtoken, counter)
 
+                                var usages = method.DescendantNodes() 
+                                    .OfType<VariableDeclaratorSyntax>()
+                                    // .Select(t => t.Identifier)
+                                    .ToList();
+
+                                foreach (var use in usages)
+                                {
+                                    Console.WriteLine("usage of variable: " + use.Parent);//.Parent.Parent.Parent);
+                                    var idTokens = use.DescendantTokens()
+                                        .Where(t => t.IsKind(SyntaxKind.IdentifierToken))
+                                        .ToList();
+                                    foreach(var id in idTokens)
+                                    {
+                                        Console.WriteLine("id tokens inside this variable declaration: " + id);
+                                    }
+                                }   
+                            // }
+
+                        }
+                    }
+                    // var symbol = semanticModel.GetSymbolInfo(readInside).Symbol;
+                    // symbol.Name.EndsWith(secret);
+                    // if (readInside.Contains(secret))
+                    // {
+                    //     Console.WriteLine("YES!");
+                    // }
+                    // else
+                    // {
+                        // foreach ri in readInside
+                            //what variables are inside their decleration?
+                            //dataFlowAnalysis(trees, insideVar)
+                        // foreach
+                    // }
+                }
                 // foreach (var id in identifiers)
                 // {
                 //     var symbol = semanticModel.GetSymbolInfo(id).Symbol;
@@ -46,32 +114,130 @@ namespace Project.SecretDetection.Semantics{
                 //     }
                 // }
 
+               
+
 // IDE FRA CHATTEN:
-                foreach (var identifier in identifiers){
-                    var symbol = semanticModel.GetSymbolInfo(identifier).Symbol;
-                    switch (symbol)
-                    {
-                        case ILocalSymbol local:
-                            // local variable → use dataflow
-                            Console.WriteLine("stymbol {0} is a local variable", symbol);
-                            break;
+                // foreach (var identifier in identifiers){
+                //     if (semanticModel == null || identifier == null)
+                //     {
+                //         Console.WriteLine("Ooopps");
+                //         return;
+   
+                //     }
+                //     var symbol = semanticModel.GetSymbolInfo(identifier).Symbol;
+                    // Console.WriteLine("We're on this one: "+ symbol);
+                                        
+                    // if (symbol != null && symbol.Name != null && symbol.Name.EndsWith(secret)) //Ends with to take into considderation prefixes, but SHOULD be EXACTLY this secret at the end of declaration (e.g. class fields, global variables startign with class.secret)
+                    // {
+                    //     switch (symbol)
+                    //     {
+                    //         case ILocalSymbol local:
+                    //             // local variable → use dataflow
+                    //             Console.WriteLine("stymbol {0} is a local variable", symbol);
+                    //             break;
 
-                        case IFieldSymbol field:
-                            Console.WriteLine("stymbol {0} is a field variable", symbol);
-                            // class/global variable → go to declaration
-                            break;
+                    //         case IFieldSymbol field:
+                    //             Console.WriteLine("stymbol {0} is a field variable", symbol);
+                    //             //find ud af hvor dens "parent" bliver brugt og kald metoden igen
+                    //                 //send evt. counter med der resetter når man finder en ny parent,
+                    //                     // og sæt en guard på som detecter en for høj guard - indikerer man har kørt i cirkel med den samme "parent"
 
-                        case IParameterSymbol param:
-                            Console.WriteLine("stymbol {0} is a what on earth this is variable", symbol);
-                            // method parameter → trace call sites (optional)
-                            break;
 
-                        case IPropertySymbol prop:
-                            Console.WriteLine("stymbol {0} is a what on earth this is variable", symbol);
-                            // property → analyze getter/setter
-                            break;
-                    }
-                }
+
+                    //             // class/global variable → go to declaration
+                    //             // var whereDidItGo = method.DescendantNodes().OfType<IdentifierNameSyntax>()
+                    //             //     .ToList();
+
+                    //             // foreach(var wherego in whereDidItGo)
+                    //             // {
+                    //             //     if(semanticModel.GetSymbolInfo(wherego).Symbol.Name.EndsWith(secret))
+                    //             //     {
+                    //             //         // symbol.Name.EndsWith(secret)
+                    //             //         Console.WriteLine(":))))");
+                    //             //     }
+                    //             //     Console.WriteLine("Where did it go? " + wherego);
+                    //             // }
+                    //             // Console.WriteLine(":");
+                    //             // var usages = method.DescendantTokens()
+                    //             //     .Where(t => t.IsKind(SyntaxKind.IdentifierToken))
+                    //             //     .Where(t => semanticModel.GetSymbolInfo(t).Symbol.Equals(symbol))
+                    //             //     // {
+                    //             //     //         var sym = semanticModel.GetSymbolInfo(t).Symbol;
+                    //             //     //         return sym != null && sym.Equals(symbol);
+                    //             //     //     })
+                    //             //     .ToList();
+                    //             // var usages = method.DescendantTokens()
+                    //             //     .Where(t => t.IsKind(SyntaxKind.IdentifierToken))
+                    //             //     .Where(t =>
+                    //             //     {
+                    //             //         var node = t.Parent as IdentifierNameSyntax;
+                    //             //         if (node == null)
+                    //             //             return false;
+
+                    //             //         var sym = semanticModel.GetSymbolInfo(node).Symbol;
+                    //             //         return sym != null && SymbolEqualityComparer.Default.Equals(sym, symbol);
+                    //             //     })
+                    //             //     .ToList();
+
+                    //             // var whereDidItGo = usages.Parent
+                    //             //     .Where(t => t.FirstAncestorOrSelf<VariableDeclaratorSyntax>())
+                    //             //     .DescendantNodes()
+                    //             //     .Where(t => t.OfType<IdentiferNameSyntax>())
+                    //             //     .FirstOrDefault();
+
+                    //             // var whereDidItGo = usages
+                    //             //     .Select(t => t.Parent) // move from token → node
+                    //             //     .Where(node => node != null)
+                    //             //     .Select(node => node.FirstAncestorOrSelf<VariableDeclaratorSyntax>())
+                    //             //     .DescendantNodes().OfType<IdentifierNameSyntax>()
+                    //             //     .FirstOrDefault();
+                                
+                    //             // Console.WriteLine(whereDidItGo);
+                    //             // foreach (var use in usages)
+                    //             // {
+                    //             //     Console.WriteLine(use);
+                    //             // }
+
+
+                    //             // if(symbol ! in read inside dataflow analyse) -- Så vil vi gerne finde hvor den er instantieret, og så kan man bare køre der ud af:
+                    //             // var usages = method.DescendantNodes()
+                    //             //         .OfType<IdentifierNameSyntax>()
+                    //             //         .Where(x => //semanticModel.GetSymbolInfo(x).Symbol.Equals(symbol))
+                    //             //         {
+                    //             //             var sym = semanticModel.GetSymbolInfo(x).Symbol;
+                    //             //             return sym != null && sym.Equals(symbol);
+                    //             //         }
+                    //             //         )
+                    //             //         .ToList();
+                    //             // // var firstUsage = usages.FirstOrDefault();
+
+                    //             // var whereDidItGo = usages
+                    //             //     .Select(t => t.FirstAncestorOrSelf<IdentifierNameSyntax>().Identifier)
+                    //             //     .ToList();
+                                    
+                    
+                    //             // // Console.WriteLine(whereDidItGo);
+                    //             // foreach (var wig in whereDidItGo)
+                    //             // {
+                    //             //     Console.WriteLine("first use declared variable: " + wig);
+                    //             // }
+
+
+                    //             break;
+
+
+                    //         case IParameterSymbol param:
+                    //             Console.WriteLine("stymbol {0} is a what on earth this is variable", symbol);
+                    //             // method parameter → trace call sites (optional)
+                    //             break;
+
+                    //         case IPropertySymbol prop:
+                    //             Console.WriteLine("stymbol {0} is a what on earth this is variable", symbol);
+                    //             // property → analyze getter/setter
+                    //             break;
+                    //     }
+                    // }
+                // }
 
 
                 // For all variables that are declared

@@ -47,12 +47,13 @@ namespace Project.SecretDetection{
             Console.WriteLine("");
             Console.WriteLine(" ============================ DATA FLOW ANALYSIS ============================= ");
             var dataflow = new DataFlowAnalyzer();
-            for(int i = 2; i < walker.InitializedArgs.Count; i++)
-            // foreach(var tree in trees)
-            {
-                dataflow.dataFlowAnalysis(trees, walker.InitializedArgs[i]); //(tree); //trees[i]
+            // for(int i = 0; i < walker.InitializedArgs.Count; i++)
+            // // foreach(var tree in trees)
+            // {
+                // Console.WriteLine("analysis on this variable: "+ walker.InitializedArgs[i]);
+                dataflow.dataFlowAnalysis(trees, "apiKey1", 0); //walker.InitializedArgs[i]); //(tree); //trees[i]
                 Console.WriteLine("");
-            }
+            // }
            
            Console.WriteLine(" DATA FLOW ANALYSIS NEEDS FIXING!!! ");
 
