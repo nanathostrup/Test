@@ -17,6 +17,7 @@ namespace Project.SecretDetection.Semantics{
 
             for (int i = 0; i < trees.Count; i++)
             {
+                Console.WriteLine("");
                 Console.WriteLine("File nr {0} being conducted a dataflow analysis on", i);
                 var compilation = CSharpCompilation.Create("MyAnalysis")
                         .AddSyntaxTrees(trees[i])
@@ -35,37 +36,42 @@ namespace Project.SecretDetection.Semantics{
                 var identifiers = method.Body.DescendantNodes()
                     .OfType<IdentifierNameSyntax>();
 
-                foreach (var id in identifiers)
-                {
-                    var symbol = semanticModel.GetSymbolInfo(id).Symbol;
+                // foreach (var id in identifiers)
+                // {
+                //     var symbol = semanticModel.GetSymbolInfo(id).Symbol;
 
-                    if (symbol is IFieldSymbol)
-                    {
-                        Console.WriteLine("Field used: " + symbol.Name);
-                    }
-                }
+                //     if (symbol is IFieldSymbol)
+                //     {
+                //         Console.WriteLine("Field used: " + symbol.Name);
+                //     }
+                // }
 
 // IDE FRA CHATTEN:
-// var symbol = semanticModel.GetSymbolInfo(identifier).Symbol;
-// switch (symbol)
-// {
-//     case ILocalSymbol local:
-//         // local variable → use dataflow
-//         break;
+                foreach (var identifier in identifiers){
+                    var symbol = semanticModel.GetSymbolInfo(identifier).Symbol;
+                    switch (symbol)
+                    {
+                        case ILocalSymbol local:
+                            // local variable → use dataflow
+                            Console.WriteLine("stymbol {0} is a local variable", symbol);
+                            break;
 
-//     case IFieldSymbol field:
-//         // class/global variable → go to declaration
-//         break;
+                        case IFieldSymbol field:
+                            Console.WriteLine("stymbol {0} is a field variable", symbol);
+                            // class/global variable → go to declaration
+                            break;
 
-//     case IParameterSymbol param:
-//         // method parameter → trace call sites (optional)
-//         break;
+                        case IParameterSymbol param:
+                            Console.WriteLine("stymbol {0} is a what on earth this is variable", symbol);
+                            // method parameter → trace call sites (optional)
+                            break;
 
-//     case IPropertySymbol prop:
-//         // property → analyze getter/setter
-//         break;
-// }
-
+                        case IPropertySymbol prop:
+                            Console.WriteLine("stymbol {0} is a what on earth this is variable", symbol);
+                            // property → analyze getter/setter
+                            break;
+                    }
+                }
 
 
                 // For all variables that are declared

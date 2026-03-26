@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.SecretsAnalysis{
     public class DictionaryDetector : Detector
     {
-        public int score;
+        public int score = 0;
         public override int detect(string secret)
         {
             return 0; // Brug evt. den her: https://github.com/loresoft/NetSpell
