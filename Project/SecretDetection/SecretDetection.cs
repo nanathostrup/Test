@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Project.SecretDetection.Semantics;
 using Project.SecretDetection.SecretsAnalysis;
 using Project.SecretDetection.EnvironmentChecking;
+using Project.SecretDetection.PlaceAnalysis;
 using System.Linq.Expressions;
 
 
@@ -46,16 +47,9 @@ namespace Project.SecretDetection{
             
             Console.WriteLine("");
             Console.WriteLine(" ============================ DATA FLOW ANALYSIS ============================= ");
-            var dataflow = new DataFlowAnalyzer();
-            // for(int i = 0; i < walker.InitializedArgs.Count; i++)
-            // // foreach(var tree in trees)
-            // {
-                // Console.WriteLine("analysis on this variable: "+ walker.InitializedArgs[i]);
-                dataflow.dataFlowAnalysis(trees, "apiKey1", 0); //walker.InitializedArgs[i]); //(tree); //trees[i]
-                Console.WriteLine("");
-            // }
-           
-           Console.WriteLine(" DATA FLOW ANALYSIS NEEDS FIXING!!! ");
+            var httpDetector = new HttpDetector(); // Skal rykkes ind i envchecker når done fordi det er sådan man får en weight ligesom med secret scoring
+            float weight = httpDetector.getWeight(trees);
+            Console.WriteLine("The wight of http location detection: "+ weight);        
 
             
             // Console.WriteLine("");

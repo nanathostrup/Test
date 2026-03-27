@@ -27,25 +27,10 @@ namespace Project.SecretDetection.EnvironmentChecking{
 
                 for (int i = 0; i < environmentVariables.Count; i++)
                 {
-                    
                     int entVal = entropyDetector.detect(environmentVariables[i].secret); //If entVal = 1 har stringen en entropi på over 3, hvilket er en bound JEG har sat, men kan ændres
                     int hexVal = hexDetector.detect(environmentVariables[i].secret);
                     int base64Val = base64Detector.detect(environmentVariables[i].secret);
                     int apiVal = apiKeyDetector.detect(environmentVariables[i].secret);
-                    // Console.WriteLine("Entropy scoring for {0}: {1}", environmentVariables[i].secret, entVal);
-                    // Console.WriteLine("Hex scoring for {0}: {1}", environmentVariables[i].secret, hexVal);
-                    // Console.WriteLine("Base64 scoring for {0}: {1}", environmentVariables[i].secret, base64Val);
-                    // Console.WriteLine("API Key scoring for {0}: {1}", environmentVariables[i].secret, apiVal);
-
-
-                    //Does it look like hex and base64? - up the sum
-                    //Does it look like a word? - dowm the sum -- genanvendte passwords så som "password" "p4ssword", 
-                        //Black list, compromised passwords
-                    //What is the length of the secret? - not high - sum down
-                    //Does it look like a specific API key? - up the sum by a LOT
-                    //Does it look like a key volt? - down the sum
-                    //IF looks like hex && ! looks like word = score +++++++
-
                     
                     //Does it look like API?
                         //Return kritical score
@@ -116,6 +101,10 @@ namespace Project.SecretDetection.EnvironmentChecking{
                     Console.WriteLine("Final score for secret {0}: {1}",environmentVariables[i].secret, environmentVariables[i].score);
                     Console.WriteLine("Comments on detection: {0}", environmentVariables[i].comment);
                 }
+        }
+        public void giveWeight()
+        {
+            
         }
     }
 }
