@@ -13,11 +13,16 @@ namespace Project.SecretDetection.PlaceAnalysis{
         public override float getWeight(List<SyntaxTree> trees)
         {
             var dataflow = new DataFlowAnalyzer();
-            // List<SyntaxToken> initAs = whatIsVarInitializedAs(trees, "HttpClient"); //hardcoded because we want to know what a developer has called a predefined HttpClient
+            List<SyntaxToken> initAs = whatIsVarInitializedAs(trees, "HttpClient"); //hardcoded because we want to know what a developer has called a predefined HttpClient
                                                         //  could also have been hardcoded into the function below
             
-            var initAs = SyntaxFactory.Identifier("_httpClient");//test variable
-            dataflow.dataflowAnalysis(trees, initAs);
+            // var initAs = SyntaxFactory.Identifier("_httpClient");//test variable
+            List<SyntaxToken> results = dataflow.dataflowInit(trees, initAs);
+            Console.WriteLine("");
+            foreach(var res in results)
+            {
+                Console.WriteLine("the variables found associated with input variables: {0}", res);
+            }
 
             return weight;
         }

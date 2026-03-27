@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq.Expressions;
 using System.Xml.Serialization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -9,67 +10,141 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.Semantics{
     class DataFlowAnalyzer
     {
-        public List<SyntaxToken> results;
+        public List<SyntaxToken> results = new List<SyntaxToken>();
         //get a dataflow analysis on variables that HAVE to be identification tokens - meaning each of the detectors must find them prior to dataflow analysis
-        public void dataflowAnalysis(List<SyntaxTree> trees, SyntaxToken idToken)//List<SyntaxToken> idTokens) //bottom up approach
+        public List<SyntaxToken> dataflowInit(List<SyntaxTree> trees, List<SyntaxToken> idTokens)
         {
-            //For each block - find idTokens
-                //if idToken is among found idTokens
-                    //save idTokens and go again until there are no new idTokens to be added
-            for (int i = 0; i < trees.Count; i++) //fot testing purposes, only weatherservices.cs being analyzed
+            results.AddRange(idTokens);
+            return dataflowAnalysis(trees, idTokens);
+        }
+        public List<SyntaxToken> dataflowAnalysis(List<SyntaxTree> trees, List<SyntaxToken> idTokens)
+        {
+            var newTokens = new List<SyntaxToken>();
+
+            foreach (var idToken in idTokens.ToList()) // <-- make a copy to safely iterate
             {
-                SyntaxNode root = trees[i].GetRoot();
-                var matchingTokens = root.DescendantTokens()
+                for (int i = 0; i < trees.Count; i++)
+                {
+                    SyntaxNode root = trees[i].GetRoot();
+                    var matchingTokens = root.DescendantTokens()
                         .Where(t => t.IsKind(SyntaxKind.IdentifierToken) &&
                                     t.Text == idToken.Text)
                         .ToList();
-                foreach(var match in matchingTokens)
-                {
-                    Console.WriteLine("found matching token: " + match);
-                    howIsItUsed(match.Parent); //we need a node not a token for this, so Parent
+
+                    foreach (var match in matchingTokens)
+                    {
+                        Console.WriteLine("found matching token: " + match);
+                        var additionalTokens = howIsItUsed(trees, idTokens, match.Parent);
+
+                        // collect new tokens
+                        foreach (var token in additionalTokens)
+                        {
+                            if (!idTokens.Contains(token) && !newTokens.Contains(token))
+                                newTokens.Add(token);
+                        }
+                    }
                 }
             }
+
+            // merge new tokens into the main list after iteration
+            if (newTokens.Count > 0)
+            {
+                idTokens.AddRange(newTokens);
+
+                // recursively analyze the new tokens
+                dataflowAnalysis(trees, newTokens);
+            }
+            return idTokens;
         }
-        public void howIsItUsed(SyntaxNode idToken)
+        // public void dataflowAnalysis(List<SyntaxTree> trees, List<SyntaxToken> idTokens)//List<SyntaxToken> idTokens) //bottom up approach
+        // {
+        //     //For each block - find idTokens
+        //         //if idToken is among found idTokens
+        //             //save idTokens and go again until there are no new idTokens to be added
+        //     foreach (var idToken in idTokens){ //REKURSION PÅ ET TIDSPUNKT!!!!
+        //         for (int i = 0; i < trees.Count; i++) //fot testing purposes, only weatherservices.cs being analyzed
+        //         {
+        //             SyntaxNode root = trees[i].GetRoot();
+        //             var matchingTokens = root.DescendantTokens()
+        //                     .Where(t => t.IsKind(SyntaxKind.IdentifierToken) &&
+        //                                 t.Text == idToken.Text)
+        //                     .ToList();
+        //             foreach(var match in matchingTokens)
+        //             {
+        //                 Console.WriteLine("found matching token: " + match);
+        //                 howIsItUsed(trees, idTokens, match.Parent); //we need a node not a token for this, so Parent
+        //             }
+        //         }
+        //     }
+        // }
+        public List<SyntaxToken> howIsItUsed(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
         {
             //is it in an invocationmethod?
                 //send on to how to save the new identificationTokens to global list
             
-            if (idToken == null) return; //stop klods?
+            // if (node == null) return; //stop klods?
 
-            switch (idToken)
+            switch (node)
             {
                 case VariableDeclaratorSyntax variableDeclarator:
-                    Console.WriteLine($"Token {idToken} is part of an assignment: {variableDeclarator}");
+                    Console.WriteLine($"Token {node} is part of an assignment: {variableDeclarator}");
+                    return idTokens;
                     break;
                 case InvocationExpressionSyntax invocation:
-                    Console.WriteLine($"Token {idToken} is part of an invocationExpression: {invocation}");
+                    Console.WriteLine($"Token {node} is part of an invocationExpression: {invocation}");
+                    return idTokens;
                     break;
                 case AssignmentExpressionSyntax assignment:
-                    Console.WriteLine($"Token {idToken} is part of an assignment: {assignment}");
+                    Console.WriteLine($"Token {node} is part of an assignment: {assignment}");
+                    return idTokens;
                     break;
                 case ParameterSyntax parameter:
-                    Console.WriteLine($"Token {idToken} is part of a method parameter: {parameter.Identifier.Text}");
+                    Console.WriteLine($"Token {node} is part of a method parameter: {parameter.Identifier.Text}");
+                    return idTokens;
                     break;
                 case MemberAccessExpressionSyntax memberAccess:
-                    Console.WriteLine($"Token {idToken} is part of a member access: {memberAccess}");
-                    memberAccessHandler();
+                    Console.WriteLine($"Token {node} is part of a member access: {memberAccess}");
+                    return memberAccessHandler(trees, idTokens, node);
                     break;
                 default:
                     Console.WriteLine("Wompidi womp");
-                    howIsItUsed(idToken.Parent); //Bliver faaaarliiigg - skal stop klods på
+                    return howIsItUsed(trees, idTokens, node.Parent); //Bliver faaaarliiigg - skal stop klods på
                     break;
             }
         }
-        public void memberAccessHandler()
+        public List<SyntaxToken> memberAccessHandler(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
         {
             Console.WriteLine("Heeey girl");
+            bool parentIsInvocation = node.Parent is InvocationExpressionSyntax;
+            if (parentIsInvocation)
+            {
+                Console.WriteLine("I KNEW IT. Need handling of other cases in memberaccessHandler");
+                return invocationHandler(trees, idTokens, node.Parent);
+            }
+            //HANDLE OTHER CASES OF THIS INSTANCE
+            return idTokens;
         }
-        public void invocation()
+        public List<SyntaxToken> invocationHandler(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
         {
             //Find the correct idTokens in invocationmethod to add to list
             //for all unique new idTokens, add to global list
             //else return list
+
+            var newIdTokens = node.DescendantTokens()
+                .Where(t => t.IsKind(SyntaxKind.IdentifierToken))
+                .ToList();
+            if(newIdTokens != null){
+                foreach(var newIdToken in newIdTokens)
+                {
+                    // Console.WriteLine(idToken);
+                    if (!idTokens.Contains(newIdToken))
+                    {
+                        idTokens.Add(newIdToken);
+                    }
+                }
+            }
+            return idTokens;
+            
         }
     }
 }
