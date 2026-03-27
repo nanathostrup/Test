@@ -17,8 +17,15 @@ namespace Project.SecretDetection.PlaceAnalysis{
                                                         //  could also have been hardcoded into the function below
             
             // var initAs = SyntaxFactory.Identifier("_httpClient");//test variable
-            List<SyntaxToken> results = dataflow.dataflowInit(trees, initAs);
+            string str = "";
+            foreach (var ia in initAs)
+            {
+                str = str + ia + " ";
+            }
+            Console.WriteLine("Tracing variables associated with: " + str);
             Console.WriteLine("");
+
+            List<SyntaxToken> results = dataflow.dataflowAnalysis(trees, initAs);            
             foreach(var res in results)
             {
                 Console.WriteLine("the variables found associated with input variables: {0}", res);
@@ -57,7 +64,7 @@ namespace Project.SecretDetection.PlaceAnalysis{
 
                 foreach (var token in initAs)
                 {
-                    Console.WriteLine("What is it initialized as?: " + token);
+                    Console.WriteLine("What is {0} initialized as?: {1}", lookFor, token);
                 }
                 if (initAs.Any())
                 {
