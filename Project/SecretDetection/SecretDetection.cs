@@ -55,39 +55,39 @@ namespace Project.SecretDetection{
             Console.WriteLine("MISSING: outcommented 'city' manually for easy debugging - fix this");  
 
             
-            Console.WriteLine("");
-            Console.WriteLine(" ================================= ENV CHECK ================================= ");
-            var envChecker =  new EnvChecker();
-            List<EnvChecker.EnvironmentVariable> unusedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
-            List<EnvChecker.EnvironmentVariable> usedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
-            unusedEnvironmentVariables = envChecker.getUnusedEnvVariables(walker.StringArgs, filePath);
-            usedEnvironmentVariables = envChecker.getUsedEnvVariables(walker.StringArgs, filePath);
+            // Console.WriteLine("");
+            // Console.WriteLine(" ================================= ENV CHECK ================================= ");
+            // var envChecker =  new EnvChecker();
+            // List<EnvChecker.EnvironmentVariable> unusedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
+            // List<EnvChecker.EnvironmentVariable> usedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
+            // unusedEnvironmentVariables = envChecker.getUnusedEnvVariables(walker.StringArgs, filePath);
+            // usedEnvironmentVariables = envChecker.getUsedEnvVariables(walker.StringArgs, filePath);
             
-            Console.WriteLine("");
-            foreach(var unusedEnvironmentVariable in unusedEnvironmentVariables)
-            {
-                Console.WriteLine("UNUSED ENVIRONMENT VARIABLE FOUND IN FILE: {0}, ON LINE {1}. SECRET: {2}", 
-                unusedEnvironmentVariable.envfile, unusedEnvironmentVariable.index, unusedEnvironmentVariable.secret);
-            }
-            foreach(var usedEnvironmentVariable in usedEnvironmentVariables)
-            {
-                Console.WriteLine("UDED ENVIRONMENT VARIABLE FOUND IN FILE: {0}, ON LINE {1}. SECRET: {2}", 
-                usedEnvironmentVariable.envfile, usedEnvironmentVariable.index, usedEnvironmentVariable.secret);
-            }
+            // Console.WriteLine("");
+            // foreach(var unusedEnvironmentVariable in unusedEnvironmentVariables)
+            // {
+            //     Console.WriteLine("UNUSED ENVIRONMENT VARIABLE FOUND IN FILE: {0}, ON LINE {1}. SECRET: {2}", 
+            //     unusedEnvironmentVariable.envfile, unusedEnvironmentVariable.index, unusedEnvironmentVariable.secret);
+            // }
+            // foreach(var usedEnvironmentVariable in usedEnvironmentVariables)
+            // {
+            //     Console.WriteLine("USED ENVIRONMENT VARIABLE FOUND IN FILE: {0}, ON LINE {1}. SECRET: {2}", 
+            //     usedEnvironmentVariable.envfile, usedEnvironmentVariable.index, usedEnvironmentVariable.secret);
+            // }
 
-            Console.WriteLine("");
-            Console.WriteLine(" ============================== SECRET ANALYSIS ============================== ");
-            // var entropyDetector = new EntropyDetector();
-            // var hexDetector = new HexDetector();
-            // var base64Detector = new Base64Detector();
+            // Console.WriteLine("");
+            // Console.WriteLine(" ================================= SCORING =================================== ");
+            // // var entropyDetector = new EntropyDetector();
+            // // var hexDetector = new HexDetector();
+            // // var base64Detector = new Base64Detector();
 
-            // var apikeyDetector = new APIKeyDetector();
-            // apikeyDetector.detect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30");
+            // // var apikeyDetector = new APIKeyDetector();
+            // // apikeyDetector.detect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30");
 
-            var envScorer = new EnvScorer();
-            envScorer.giveScore(usedEnvironmentVariables);
-            Console.WriteLine("");
-            envScorer.giveScore(unusedEnvironmentVariables);
+            // var envScorer = new EnvScorer();
+            // envScorer.giveScore(usedEnvironmentVariables);
+            // Console.WriteLine("");
+            // envScorer.giveScore(unusedEnvironmentVariables);
 
 
             // // Console.WriteLine(" ############ TEST ############ ");
@@ -107,23 +107,23 @@ namespace Project.SecretDetection{
 
 
 
-            Console.WriteLine("");
-            Console.WriteLine(" ================================== REPORT =================================== ");            
-            string logpath = Path.Combine(Directory.GetCurrentDirectory(), "Report.txt"); //Create the output log
-            logpath = Path.GetFullPath(logpath);
+            // Console.WriteLine("");
+            // Console.WriteLine(" ================================== REPORT =================================== ");            
+            // string logpath = Path.Combine(Directory.GetCurrentDirectory(), "Report.txt"); //Create the output log
+            // logpath = Path.GetFullPath(logpath);
 
-            using (StreamWriter writer = new StreamWriter(logpath, append: false)) // append: false to overwrite, true to append to existing file, tak til chat:)
-            {
-                foreach (var usedEnvVar in usedEnvironmentVariables)
-                {
-                    writer.WriteLine("An environment variable is used in file {0} on line {1} and has a score of {2}. {3}", usedEnvVar.envfile, usedEnvVar.index, usedEnvVar.score, usedEnvVar.comment);
-                }
-                foreach (var unusedEnvVar in unusedEnvironmentVariables)
-                {
-                    writer.WriteLine("An unused environment variable is detected in file {0} on line {1} and has a score of {2}. {3}", unusedEnvVar.envfile, unusedEnvVar.index, unusedEnvVar.score, unusedEnvVar.comment);
-                }
-            }
-            Console.WriteLine("A report has been made in {0} \n", logpath);
+            // using (StreamWriter writer = new StreamWriter(logpath, append: false)) // append: false to overwrite, true to append to existing file, tak til chat:)
+            // {
+            //     foreach (var usedEnvVar in usedEnvironmentVariables)
+            //     {
+            //         writer.WriteLine("An environment variable is used in file {0} on line {1} and has a score of {2}. {3}", usedEnvVar.envfile, usedEnvVar.index, usedEnvVar.score, usedEnvVar.comment);
+            //     }
+            //     foreach (var unusedEnvVar in unusedEnvironmentVariables)
+            //     {
+            //         writer.WriteLine("An unused environment variable is detected in file {0} on line {1} and has a score of {2}. {3}", unusedEnvVar.envfile, unusedEnvVar.index, unusedEnvVar.score, unusedEnvVar.comment);
+            //     }
+            // }
+            // Console.WriteLine("A report has been made in {0} \n", logpath);
 
              //For printing each AST
             // foreach (SyntaxTree tree in trees)

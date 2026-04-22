@@ -10,124 +10,81 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.Semantics{
     class DataFlowAnalyzer
     {
-        public List<SyntaxToken> dataflowAnalysis(List<SyntaxTree> trees, List<SyntaxToken> idTokens) //OPTIMIZE!!! DER ER 4 FOR LOOPS! og rekursion:)
+        public List<SyntaxToken> dataflowAnalysis(List<SyntaxTree> trees, List<SyntaxToken> idTokens, int counter)
         {
-            //For each idToken that we want to trace
-                // For each tree 
-                    // find all idTokens
-                    //if idToken input is is among found idTokens
-                        //save idTokens and go again until there are no new idTokens to be added (done recursively for specific syntax's because you want specific tokens)
+            //we look into all id tokens -- possible that more are added
+            //then for each id token we look through all trees
+            //We need to find the idtoken in the tree
+            //then check how its used
+            //Based on how its used its handled in switch
 
-            var newTokens = new List<SyntaxToken>();
-
-            foreach (var idToken in idTokens.ToList()) // To.List makes a copy to safely iterate -- Gør rekursivt på et tidspunkt i stedet
+            if (counter == 1) //stop klods på rekursions dybde
             {
-                for (int i = 0; i < trees.Count; i++)//Ka blive gjort MEGET mere smart
-                {
-                    SyntaxNode root = trees[i].GetRoot();
-                    var matchingTokens = root.DescendantTokens()
-                        .Where(t => t.IsKind(SyntaxKind.IdentifierToken) &&
-                                    t.Text == idToken.Text)
-                        .ToList();
-
-                    foreach (var match in matchingTokens) //MEEEGET MERE SMART
-                    {
-                        // Console.WriteLine("found matching token: " + match);
-                        var additionalTokens = howIsVariableUsed(trees, idTokens, match.Parent);
-
-                        // collect new tokens
-                        foreach (var token in additionalTokens)
-                        {
-                            if (!idTokens.Any(t => t.Text == token.Text) && !newTokens.Any(t => t.Text == token.Text)) //also remove possible duplicates
-                            {
-                                newTokens.Add(token);
-                            }
-                        }
-                    }
-                }
+                return idTokens;
             }
-            // Console.WriteLine("Run over");
-            // merge new tokens into the main list after iteration
-            if (newTokens.Count > 0)
+
+            List<SyntaxToken> foundInTree = getIdTokenInTree(trees, idTokens);
+            List<SyntaxToken> newFinds = howIsVariableUsed(trees, foundInTree);
+            if(newFinds == foundInTree)
             {
-                // Console.WriteLine("we go again REKURSION VIRKERRRRRR!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                idTokens.AddRange(newTokens);
-
-                return dataflowAnalysis(trees, idTokens);// recursively get hold of the new tokens
+                return newFinds; //nothing new to check
             }
-            return idTokens; // No more recursion, we finish with what we have
+            else
+            {
+                return dataflowAnalysis(trees, idTokens, 1);
+            }
+
+            //Kør den videre
+            //retuner newFinds
+            //sammenlign med input idtokens, hvis der ikke er nogle nye, så returner newFinds
+                //Ellers så kører vi dataflow analyse igen med newFinds
+
+            // if(we)
+            //     dataflowAnalysis(trees, idTokens+newOne);
+            return idTokens;
         }
-
-        public List<SyntaxToken> howIsVariableUsed(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
+        public List<SyntaxToken> getIdTokenInTree(List<SyntaxTree> trees, List<SyntaxToken> idTokens) // RETHINK THiS METHOD
+        {
+            List<SyntaxToken> foundInTree = new List<SyntaxToken>();
+            foreach (var idToken in idTokens){ // To.List makes a copy to safely iterate -- Gør rekursivt på et tidspunkt i stedet 
+                for (int i = 0; i < trees.Count; i++)
+                    {
+                        SyntaxNode root = trees[i].GetRoot(); //SKAL VÆRE i
+                        var matchingTokens = root.DescendantTokens()
+                            .Where(t => t.IsKind(SyntaxKind.IdentifierToken) &&
+                                        t.Text == idToken.Text)
+                            .ToList();
+                        
+                        foundInTree.AddRange(matchingTokens);
+                    }
+            }
+            return foundInTree;
+        }
+        
+        public List<SyntaxToken> howIsVariableUsed(List<SyntaxTree> trees, List<SyntaxToken> idTokens)//, SyntaxNode node)
         {
             //is variable part of an invocationmethod?
                 //send on to how to save the new identificationTokens according to method handling
             // is variable part of ...
-
-            switch (node)
-            {
-                case VariableDeclaratorSyntax variableDeclarator:
-                    // Console.WriteLine($"Token {node} is part of an assignment: {variableDeclarator}");
-                    return variableDeclaratorHandler(trees, idTokens, node.Parent);
-                    // return idTokens;
-                    break;
-                case InvocationExpressionSyntax invocation:
-                    // Console.WriteLine($"Token {node} is part of an invocationExpression: {invocation}");
-                    return idTokens;
-                    break;
-                case AssignmentExpressionSyntax assignment:
-                    // Console.WriteLine($"Token {node} is part of an assignment: {assignment}");
-                    return idTokens;
-                    break;
-                case ParameterSyntax parameter:
-                    // Console.WriteLine($"Token {node} is part of a method parameter: {parameter.Identifier.Text}");
-                    return idTokens;
-                    break;
-                case MemberAccessExpressionSyntax memberAccess:
-                    // Console.WriteLine($"Token {node} is part of a member access: {memberAccess}");
-                    return memberAccessHandler(trees, idTokens, node);
-                    break;
-                default:
-                    // Console.WriteLine("Wompidi womp");
-                    if (node.Parent != null){
-                        return howIsVariableUsed(trees, idTokens, node.Parent);
-                    }
-                    return new List<SyntaxToken>();
-                    // return howIsVariableUsed(trees, idTokens, node.Parent); //Bliver faaaarliiigg - skal stop klods på
-                    break;
+            foreach(SyntaxToken node in idTokens){
+                switch (node.Parent)
+                {
+                    case MemberAccessExpressionSyntax memberAccess:
+                        Console.WriteLine($"Token {node} is part of a member access: {memberAccess}");
+                        return new List<SyntaxToken>();
+                    case InvocationExpressionSyntax invocation:
+                        return new List<SyntaxToken>(); 
+                    case VariableDeclaratorSyntax variableDeclarator:
+                        return new List<SyntaxToken>(); 
+                    case AssignmentExpressionSyntax assignment:
+                        return new List<SyntaxToken>(); 
+                    case ParameterSyntax parameter:
+                        return new List<SyntaxToken>(); 
+                    default:
+                        return new List<SyntaxToken>();
+                }
             }
-        }
-        public List<SyntaxToken> memberAccessHandler(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
-        {
-            // Console.WriteLine("Heeey girl");
-            bool parentIsInvocation = node.Parent is InvocationExpressionSyntax;
-            if (parentIsInvocation)
-            {
-                // Console.WriteLine("I KNEW IT. Need handling of other cases in memberaccessHandler");
-                return invocationHandler(trees, idTokens, node.Parent);
-            }
-            //HANDLE OTHER CASES OF THIS INSTANCE
-            return idTokens;
-        }
-        public List<SyntaxToken> invocationHandler(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
-        {
-            //find the idtokens that are not already in idTokens (get only new instances)
-            //return that list
-
-            var newIdTokens = node.DescendantTokens()
-                .Where(t => t.IsKind(SyntaxKind.IdentifierToken) && !idTokens.Contains(t))
-                .ToList();
-
-            return newIdTokens;
-                        //Lavet rekursions venlig med en ny liste der bliver returneret, hvis man tilføjer til idTokens, og returnerer den er den ikke rekursions venlig altså den vil ikke kunne se der er sket noget nyt forrest i rekursionen.
-        }
-        public List<SyntaxToken> variableDeclaratorHandler(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
-        {
-            var newIdTokens = node.DescendantTokens()
-                .Where(t => t.IsKind(SyntaxKind.IdentifierToken) && !idTokens.Contains(t) && t.ValueText != "city") //city is outcommented for now - to make debugging easier
-                .ToList();
-
-            return newIdTokens;
+            return new List<SyntaxToken>(); 
         }
     }
 }

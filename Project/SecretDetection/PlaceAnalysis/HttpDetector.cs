@@ -25,7 +25,7 @@ namespace Project.SecretDetection.PlaceAnalysis{
             Console.WriteLine("Tracing variables associated with: " + str);
             Console.WriteLine("");
 
-            List<SyntaxToken> results = dataflow.dataflowAnalysis(trees, initAs);            
+            List<SyntaxToken> results = dataflow.dataflowAnalysis(trees, initAs, 0);            
             foreach(var res in results)
             {
                 Console.WriteLine("the variables found associated with input variables: {0}", res);
@@ -57,9 +57,9 @@ namespace Project.SecretDetection.PlaceAnalysis{
                 
                 // Find out what the Identification Tokens in AST are initialized as
                 var initAs = idTokensSyntaxNodes
-                    .Select(n => n.FirstAncestorOrSelf<VariableDeclaratorSyntax>())
+                    .Select(n => n.FirstAncestorOrSelf<VariableDeclaratorSyntax>()) //Fix possible null
                     .Where(v => v != null)
-                    .Select(v => v.Identifier)
+                    .Select(v => v.Identifier) //Fix possible null
                     .ToList();                    
 
                 foreach (var token in initAs)
