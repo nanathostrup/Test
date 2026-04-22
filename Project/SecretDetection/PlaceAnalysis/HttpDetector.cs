@@ -25,7 +25,7 @@ namespace Project.SecretDetection.PlaceAnalysis{
             Console.WriteLine("Tracing variables associated with: " + str);
             Console.WriteLine("");
 
-            List<SyntaxToken> results = dataflow.dataflowAnalysis(trees, initAs, 0);            
+            List<SyntaxToken> results = dataflow.dataflowAnalysis(trees, initAs);//, 0);            
             foreach(var res in results)
             {
                 Console.WriteLine("the variables found associated with input variables: {0}", res);
