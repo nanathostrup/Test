@@ -10,15 +10,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.SecretsAnalysis{
     public class HexDetector : Detector
     {
-        public int score;
-        public override int detect(string secret)
+        public float score;
+        public override float detect(string secret)
         {
-            score = 0;
+            score = 0.0F;
             bool hex = isItHex(secret);
 
             if (hex)
             {
-                score += 200;
+                score += 200.0F;
                 // return 1;
             }
             // else return 0;

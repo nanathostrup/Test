@@ -17,20 +17,20 @@ namespace Project.SecretDetection.Semantics{
             //We need to find the idtoken in the tree
             //then check how its used
             //Based on how its used its handled in switch
-            Console.WriteLine("");
-            Console.WriteLine("DataFlowAnalyzer entered");
-            foreach(var id in idTokens)
-            {
-                Console.WriteLine(id);
-            }
+            // Console.WriteLine("");
+            // Console.WriteLine("DataFlowAnalyzer entered");
+            // foreach(var id in idTokens)
+            // {
+            //     Console.WriteLine(id);
+            // }
 
             List<SyntaxToken> foundInTrees = getIdTokenInTree(trees, idTokens);
+            
             List<SyntaxToken> newFinds = new List<SyntaxToken>();
             foreach(var id in foundInTrees) //Not sure I want it handled like this
             {
                 newFinds.AddRange(howIsVariableUsed(trees, foundInTrees, id.Parent));
             }
-            // List<SyntaxToken> newFinds = howIsVariableUsed(trees, foundInTrees);
             newFinds.AddRange(idTokens);
             List<SyntaxToken> newNewFinds = newFinds.Distinct().ToList();
 
@@ -38,19 +38,14 @@ namespace Project.SecretDetection.Semantics{
             var onlyInSecond = idTokens.Except(newNewFinds);
             bool areEqual = !onlyInFirst.Any() && !onlyInSecond.Any(); //Filter out the repeat tokens
 
-            foreach(var n in newFinds)
-            {
-                Console.WriteLine(n);
-            }
-
             if(areEqual) // Checker om de to lister er ens
             {
-                Console.WriteLine("new=id");
+                // Console.WriteLine("new=id");
                 return idTokens; //Stop klods
             }
             else
             {
-                Console.WriteLine("new!=id");
+                // Console.WriteLine("new!=id");
                 return dataflowAnalysis(trees, newNewFinds); //rekursivt kald for at analysere den nye liste af id tokens
             }
         }
@@ -80,20 +75,20 @@ namespace Project.SecretDetection.Semantics{
             switch (node)
             {
                 case MemberAccessExpressionSyntax memberAccess:
-                    Console.WriteLine($"Token {node} is part of a member access: {memberAccess}");
+                    // Console.WriteLine($"Token {node} is part of a member access: {memberAccess}");
                     return memberAccessHandler(trees, idTokens, node);
                 case InvocationExpressionSyntax invocation:
-                    Console.WriteLine($"Token {node} is part of a member access: {invocation}");
+                    // Console.WriteLine($"Token {node} is part of a member access: {invocation}");
                     return invocationHandler(trees, idTokens, node);
                 case VariableDeclaratorSyntax variableDeclarator:
-                    Console.WriteLine($"Token {node} is part of a member access: {variableDeclarator}");
+                    // Console.WriteLine($"Token {node} is part of a member access: {variableDeclarator}");
                     return variableDeclaratorHandler(trees, idTokens, node);
                 case AssignmentExpressionSyntax assignment:
                     return new List<SyntaxToken>(); 
                 case ParameterSyntax parameter:
                     return new List<SyntaxToken>(); 
                 default:
-                    Console.WriteLine($"NOPE: Token {node} is not part of any switch case");
+                    // Console.WriteLine($"NOPE: Token {node} is not part of any switch case");
                     if (node.Parent != null){
                         return howIsVariableUsed(trees, idTokens, node.Parent); //Not sure if this should be done like this?
                     }
@@ -130,10 +125,6 @@ namespace Project.SecretDetection.Semantics{
                 .Where(t => t.IsKind(SyntaxKind.IdentifierToken) && !idTokens.Contains(t)) // && t.ValueText != "city") //city is outcommented for now - to make debugging easier
                 .ToList();
 
-            foreach(var nidt in newIdTokens)
-            {
-                Console.WriteLine(nidt);
-            }
             return newIdTokens;
         }
     }

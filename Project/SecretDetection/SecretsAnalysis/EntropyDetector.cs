@@ -10,10 +10,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.SecretsAnalysis{
     public class EntropyDetector : Detector
     {
-        public int score;
-        public override int detect (string secret)
+        public float score;
+        public override float detect (string secret)
         {
-            score = 0; 
+            score = 0.0F; 
             double entropy = ShannonEntropy(secret);
             entropy = Math.Round(entropy);
             int convetedEntropy = Convert.ToInt32(entropy);
@@ -31,7 +31,7 @@ namespace Project.SecretDetection.SecretsAnalysis{
             // }
             if (convetedEntropy > 3)// Vilkårlig threshhold, som skal kunne ændres senere hen
             {
-                score =+ 10;
+                score =+ 10.0F;
                 // return 1;
             }
             // else return 0;

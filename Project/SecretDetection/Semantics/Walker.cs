@@ -7,8 +7,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.Semantics{
     class Walker : CSharpSyntaxWalker
     {
+        //Måske lav til dictionary så vi er sikker på at de hænger sammen på den rigtige måde
         public List<string> StringArgs = new List<string>(); //All string argument inputs to GetEnvVar e.g. x = GetEnvVar(y), this list is for the y's - Maybe find a better way to do this than a global variable
         public List<string> InitializedArgs = new List<string>(); //What the environment variable is initialized as e.g. x = GetEnvVar(y), this list is for the x's 
+        public Dictionary<string, string> EnvironmentVariableMap = new();
         public override void VisitInvocationExpression(InvocationExpressionSyntax invocation)
             {
             //Does the invocation have a child that is GetEnvVar?
@@ -38,11 +40,17 @@ namespace Project.SecretDetection.Semantics{
                     .FirstAncestorOrSelf<VariableDeclaratorSyntax>() //Not declaraTION - then we get the entire line which is too much for getting the name its initialized as
                     .Identifier.Text;
 
-                InitializedArgs.Add(initializedas); //Hvorfor adder jeg til mine global lister på to måder? Genovervej på tidspunkt
+                // InitializedArgs.Add(initializedas); //Hvorfor adder jeg til mine global lister på to måder? Genovervej på tidspunkt
 
                 if (arglist.Any())
                 {
-                    StringArgs.AddRange(arglist); // add to global variable. This could probably be done better, but works for now
+                    // StringArgs.AddRange(arglist); // add to global variable. This could probably be done better, but works for now
+                
+                    // StringArgs.AddRange(arglist);
+                    foreach (var arg in arglist)
+                    {
+                        EnvironmentVariableMap[arg] = initializedas;
+                    }
                 }
             }
             base.VisitInvocationExpression(invocation);

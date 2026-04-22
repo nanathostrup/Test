@@ -11,14 +11,14 @@ using Project.SecretDetection.SecretsAnalysis.APIKeyVariants;
 namespace Project.SecretDetection.SecretsAnalysis{
     public class APIKeyDetector: Detector
     {
-        public int score = 0;
+        public float score = 0.0F;
         public string apiType = "NONE";
-        public override int detect(string secret)
+        public override float detect(string secret)
         {
-            score = 0;
+            score = 0.0F;
             if (doesItLookLikeAPIKey(secret))
             {
-                score += 40000;
+                score += 40000.0F;
                 // return 1;
             }
             return score;

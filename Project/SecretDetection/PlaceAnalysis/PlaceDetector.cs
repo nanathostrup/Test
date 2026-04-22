@@ -13,7 +13,8 @@ namespace Project.SecretDetection.PlaceAnalysis{
     public abstract class PlaceDetector
     {
         public float weight; //how critical is the place the secret is leaked to?
-        public abstract float getWeight(List<SyntaxTree> trees); //input is where its looking for the place you want it to look
+        public abstract float getWeight(List<SyntaxTree> trees, string secret); //input is where its looking for the place you want it to look
+                                                                                //and the string secret you are looking to trace
                                                                  //should return the weight
     }
 }

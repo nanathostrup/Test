@@ -16,8 +16,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.SecretsAnalysis{
     public abstract class Detector
     {
-        public int score {get; set;}
-        public abstract int detect(string secret);  //used to detect if the string is a secret
+        public float score {get; set;}
+        public abstract float detect(string secret);  //used to detect if the string is a secret
                                                     //should return the score - figure this out
                                                     //måske lav til en bool? Det er hvad der bruges lige nu anyways?
     }

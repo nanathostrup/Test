@@ -14,19 +14,23 @@ namespace Project.SecretDetection.EnvironmentChecking{
                 public int index { get; set;} //where is it located?
                 public string envfile { get; set;} //where is it located?
                 public string secret { get; set;} //what is the detection "secret"?
-                public int score { get; set;} //how critical a detection is
+                public string name { get; set;} //what is it initialized as? What is the secrets "name"?
+                public float score { get; set;} //how critical a detection is
                 public string comment { get; set;} //what kind of "secret" is it if any?
-                public EnvironmentVariable(int index, string envfile, string secret, int score, string comment)
+                public bool used { get; set;} //is the variable used in code?
+                public EnvironmentVariable(int index, string envfile, string secret, string name, float score, string comment, bool used)
                 {
                     this.index = index;
                     this.envfile = envfile;
                     this.secret = secret;
+                    this.name = name;
                     this.score = score;
                     this.comment = comment;
+                    this.used = used;
                 } 
             }
 
-        public List<EnvironmentVariable> getUnusedEnvVariables(List<string> StringArgs, string filePath) //OPTIMIZE!!!
+        public List<EnvironmentVariable> getUnusedEnvVariables(Dictionary<string, string> environmentVariableMap, string filePath) //OPTIMIZE!!!
         {
             //For each stringargument 
                 //is it present in the envfiles?
@@ -53,21 +57,25 @@ namespace Project.SecretDetection.EnvironmentChecking{
                     i++; //update the index counter every time we move line :)
                     used = false;
                     
-                    foreach (var str in StringArgs)
+
+                    foreach (var kvp in environmentVariableMap)
                     {
-                        if (line.Contains(str))
+                        if (line.Contains(kvp.Key))
                         {
                             used = true;
                         }
                     }
+
                     if (!used)
                     {
                         // unusedEnvironmentVariables.Add(line); //Hele linjen in envfilen
                         string extractedStr = extractString(line); //Kun selve valuen
                         int locationIndex = i;//Lokationen i env filen
-                        int score = 0; //Den skal initialiseres her, og opdateres i analysen af stringen
-                        string comment = ""; //Den skal initialiseres her, og opdateres i analyse delen                      
-                        var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, score, comment);
+                        float score = 0.0F; //Den skal initialiseres her, og opdateres i analysen af stringen
+                        string comment = ""; //Den skal initialiseres her, og opdateres i analyse delen   
+                        string name = extractName(line); //smid navnet på hvad secreten er initialiseret som ind 
+                                                         // -- Anderledes end usedenvvars fordi det den er intialiseret som bare er i env filen og ikke i koden
+                        var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, name, score, comment, false);
                         unusedEnvironmentVariables.Add(envVar);
                     }
                 }
@@ -76,7 +84,7 @@ namespace Project.SecretDetection.EnvironmentChecking{
         }
 
 
-        public List<EnvironmentVariable> getUsedEnvVariables(List<string> StringArgs, string filePath) //OPTIMIZE!!!
+        public List<EnvironmentVariable> getUsedEnvVariables(Dictionary<string, string> environmentVariableMap, string filePath) //OPTIMIZE!!!
         {
             List<EnvironmentVariable> usedEnvironmentVariables = new List<EnvironmentVariable>();
 
@@ -96,16 +104,19 @@ namespace Project.SecretDetection.EnvironmentChecking{
                 foreach (var line in File.ReadLines(envfile))
                 {
                     i++; //update the index counter every time we move line :)
-                    foreach (var str in StringArgs)
+                    
+                    // for(int j = 0; j < StringArgs.Count; j++)
+                    foreach (var kvp in environmentVariableMap)
                     {
-                        if (line.Contains(str))
+                        if (line.Contains(kvp.Key))
                         {
                             // usedEnvironmentVariables.Add(line); //Hele linjen in envfilen
                             string extractedStr = extractString(line); //Kun selve valuen
                             int locationIndex = i; //Lokationen i env filen - burde måske være sin egen funtion men det her er så meget nemmere:)))
-                            int score = 0; //Den skal initialiseres her, og opdateres i analysen af stringen
-                            string comment = ""; //Den skal initialiseres her, og opdateres i analyse delen                      
-                            var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, score, comment);
+                            float score = 0.0F; //Den skal initialiseres her, og opdateres i analysen af stringen
+                            string comment = ""; //Den skal initialiseres her, og opdateres i analyse delen
+                            string name = kvp.Value; //Hvad selve secreten er initializeret som i koden. Skal bruges til dataflow analysen
+                            var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, name, score, comment, true);
                             usedEnvironmentVariables.Add(envVar);
                         }
                     }
@@ -128,6 +139,18 @@ namespace Project.SecretDetection.EnvironmentChecking{
                 {
                     return extractedString;
                 }
+            }
+            catch
+            {
+                return envVariables;
+            }
+        }
+        public string extractName(string envVariables) // Giver dig din string uden = og uden mellemrummet. Hvis ikke "= " passer så får man bare alt.
+        {
+            try
+            {
+                string extractedName = envVariables.Split('=')[0];
+                return extractedName;
             }
             catch
             {

@@ -9,9 +9,10 @@ using Project.SecretDetection.Semantics;
 namespace Project.SecretDetection.PlaceAnalysis{
     public class HttpDetector : PlaceDetector
     {
-        public float weight = 0.0F;
-        public override float getWeight(List<SyntaxTree> trees)
+        public float weight = 1.0F;
+        public override float getWeight(List<SyntaxTree> trees, string secret)
         {
+            weight = 1.0F; //reset (ikke 0, fordi vi skal gange med den:))
             var dataflow = new DataFlowAnalyzer();
             List<SyntaxToken> initAs = whatIsVarInitializedAs(trees, "HttpClient"); //hardcoded because we want to know what a developer has called a predefined HttpClient
                                                         //  could also have been hardcoded into the function below
@@ -22,13 +23,18 @@ namespace Project.SecretDetection.PlaceAnalysis{
             {
                 str = str + ia + " ";
             }
-            Console.WriteLine("Tracing variables associated with: " + str);
-            Console.WriteLine("");
+            // Console.WriteLine("Tracing variables associated with: " + str);
+            // Console.WriteLine("");
 
             List<SyntaxToken> results = dataflow.dataflowAnalysis(trees, initAs);//, 0);            
-            foreach(var res in results)
+            // foreach(var res in results)
+            // {
+            //     Console.WriteLine("the variables found associated with input variables: {0}", res);
+            // }
+
+            if (results.Any(t => t.ValueText == secret))
             {
-                Console.WriteLine("the variables found associated with input variables: {0}", res);
+                weight += 100.0F;
             }
 
             return weight;
@@ -62,10 +68,10 @@ namespace Project.SecretDetection.PlaceAnalysis{
                     .Select(v => v.Identifier) //Fix possible null
                     .ToList();                    
 
-                foreach (var token in initAs)
-                {
-                    Console.WriteLine("What is {0} initialized as?: {1}", lookFor, token);
-                }
+                // foreach (var token in initAs)
+                // {
+                //     Console.WriteLine("What is {0} initialized as?: {1}", lookFor, token);
+                // }
                 if (initAs.Any())
                 {
                     results.AddRange(initAs);

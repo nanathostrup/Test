@@ -10,14 +10,14 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.SecretsAnalysis{
     public class Base64Detector : Detector
     {
-        public int score = 0;
-        public override int detect(string secret)
+        public float score = 0;
+        public override float detect(string secret)
         {
-            score = 0;
+            score = 0.0F;
             bool base64 = isItBase64(secret);
             if (base64)
             {
-                score += 3000;
+                score += 3000.0F;
                 // return 1;
             }
             // else return 0;
