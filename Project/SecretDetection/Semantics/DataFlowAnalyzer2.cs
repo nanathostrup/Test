@@ -22,9 +22,9 @@ namespace Project.SecretDetection.Semantics{
 
             foreach (var idToken in idTokens.ToList()) // To.List makes a copy to safely iterate -- Gør rekursivt på et tidspunkt i stedet
             {
-                // for (int i = 0; i < trees.Count; i++)//Ka blive gjort MEGET mere smart
-                // {
-                    SyntaxNode root = trees[2].GetRoot(); //SKAL VÆRE i
+                for (int i = 0; i < trees.Count; i++)//Ka blive gjort MEGET mere smart
+                {
+                    SyntaxNode root = trees[i].GetRoot(); //SKAL VÆRE i
                     var matchingTokens = root.DescendantTokens()
                         .Where(t => t.IsKind(SyntaxKind.IdentifierToken) &&
                                     t.Text == idToken.Text)
@@ -43,7 +43,7 @@ namespace Project.SecretDetection.Semantics{
                                 newTokens.Add(token);
                             }
                         }
-                    // }
+                    }
                 }
             }
             // Console.WriteLine("Run over");

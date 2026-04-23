@@ -36,13 +36,6 @@ namespace Project.SecretDetection{
                 SyntaxNode root = tree.GetRoot(); //Get the root of the tree
                 walker.Visit(root); //Check the current AST for invocation expressions. Walker går gennem træet, og der er blevet lavet sær regel for invocation expressions
             }
-
-            // for(int i = 0; i < walker.InitializedArgs.Count; i++) //skal være walker.StringArgs, da der er blevet overridet, så der kan ikke returneres disse values der hvor de findes:( -- kan finde ud af fix på tidspunkt
-            // {
-            //     Console.WriteLine("GetEnvironmentVariable() inputs found: " + walker.StringArgs[i]); //Test at vi får de rigtige ud
-            //     Console.WriteLine("GetEnvironmentVariable() initialized as: " + walker.InitializedArgs[i]);
-            //     Console.WriteLine("");
-            // }
             foreach (var kvp in walker.EnvironmentVariableMap)
             {
                 Console.WriteLine("GetEnvironmentVariable() input: " + kvp.Key);
@@ -56,10 +49,8 @@ namespace Project.SecretDetection{
             var envChecker =  new EnvChecker();
             List<EnvChecker.EnvironmentVariable> unusedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
             List<EnvChecker.EnvironmentVariable> usedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
-            unusedEnvironmentVariables = envChecker.getUnusedEnvVariables(walker.EnvironmentVariableMap, filePath); //ikke nogen initialized args her, netop fordi de ikke er brugt og dermed ikke initializeret.
+            unusedEnvironmentVariables = envChecker.getUnusedEnvVariables(walker.EnvironmentVariableMap, filePath); 
             usedEnvironmentVariables = envChecker.getUsedEnvVariables(walker.EnvironmentVariableMap, filePath);
-            // unusedEnvironmentVariables = envChecker.getUnusedEnvVariables(walker.StringArgs, filePath); //ikke nogen initialized args her, netop fordi de ikke er brugt og dermed ikke initializeret.
-            // usedEnvironmentVariables = envChecker.getUsedEnvVariables(walker.StringArgs, walker.InitializedArgs, filePath);
             
             Console.WriteLine("");
             foreach(var unusedEnvironmentVariable in unusedEnvironmentVariables)
@@ -78,10 +69,17 @@ namespace Project.SecretDetection{
             var httpDetector = new HttpDetector(); // Skal rykkes ind i envchecker når done fordi det er sådan man får en weight ligesom med secret scoring
             foreach(var used in usedEnvironmentVariables)
             {
+                Console.WriteLine("");
                 float weight = httpDetector.getWeight(trees, used.name);
                 Console.WriteLine("The weight of http location detection: {0}, for variable {1}", weight, used.name);    
             }
-            
+
+            //SINGLE TEST FOR DEBUGGING
+            // List<SyntaxTree> firstTree = new List<SyntaxTree> { trees[2] };
+            // float weight = httpDetector.getWeight(firstTree, "defaultCity");
+            // Console.WriteLine("The weight of http location detection: {0}, for variable {1}", weight, "defaultCity");   
+
+
             Console.WriteLine("MISSING: Finish dataflow analysis, only partly done"); 
 
             
@@ -96,10 +94,13 @@ namespace Project.SecretDetection{
             // apikeyDetector.detect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30");
 
             var envScorer = new EnvScorer();
+            Console.WriteLine(usedEnvironmentVariables[1].secret);
             envScorer.giveScore(usedEnvironmentVariables, trees);
+            envScorer.giveWeight(usedEnvironmentVariables, trees);
+
             Console.WriteLine("");
             envScorer.giveScore(unusedEnvironmentVariables, trees);
-            envScorer.giveWeight(usedEnvironmentVariables, trees);
+            
 
 
             // // // Console.WriteLine(" ############ TEST ############ ");
@@ -119,25 +120,25 @@ namespace Project.SecretDetection{
 
 
 
-            // Console.WriteLine("");
-            // Console.WriteLine(" ================================== REPORT =================================== ");            
-            // string logpath = Path.Combine(Directory.GetCurrentDirectory(), "Report.txt"); //Create the output log
-            // logpath = Path.GetFullPath(logpath);
+            Console.WriteLine("");
+            Console.WriteLine(" ================================== REPORT =================================== ");            
+            string logpath = Path.Combine(Directory.GetCurrentDirectory(), "Report.txt"); //Create the output log
+            logpath = Path.GetFullPath(logpath);
 
-            // using (StreamWriter writer = new StreamWriter(logpath, append: false)) // append: false to overwrite, true to append to existing file, tak til chat:)
-            // {
-            //     foreach (var usedEnvVar in usedEnvironmentVariables)
-            //     {
-            //         writer.WriteLine("An environment variable is used in file {0} on line {1} and has a score of {2}. {3}", usedEnvVar.envfile, usedEnvVar.index, usedEnvVar.score, usedEnvVar.comment);
-            //     }
-            //     foreach (var unusedEnvVar in unusedEnvironmentVariables)
-            //     {
-            //         writer.WriteLine("An unused environment variable is detected in file {0} on line {1} and has a score of {2}. {3}", unusedEnvVar.envfile, unusedEnvVar.index, unusedEnvVar.score, unusedEnvVar.comment);
-            //     }
-            // }
-            // Console.WriteLine("A report has been made in {0} \n", logpath);
+            using (StreamWriter writer = new StreamWriter(logpath, append: false)) // append: false to overwrite, true to append to existing file, tak til chat:)
+            {
+                foreach (var usedEnvVar in usedEnvironmentVariables)
+                {
+                    writer.WriteLine("An environment variable is used in file {0} on line {1} and has a score of {2}. {3}", usedEnvVar.envfile, usedEnvVar.index, usedEnvVar.score, usedEnvVar.comment);
+                }
+                foreach (var unusedEnvVar in unusedEnvironmentVariables)
+                {
+                    writer.WriteLine("An unused environment variable is detected in file {0} on line {1} and has a score of {2}. {3}", unusedEnvVar.envfile, unusedEnvVar.index, unusedEnvVar.score, unusedEnvVar.comment);
+                }
+            }
+            Console.WriteLine("A report has been made in {0} \n", logpath);
 
-             //For printing each AST
+            //For printing each AST
             // foreach (SyntaxTree tree in trees)
             // {
             //     Console.WriteLine(" ================================= NEW SYNTAX TREE ================================= ");

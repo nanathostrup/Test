@@ -60,6 +60,7 @@ namespace Project.SecretDetection.EnvironmentChecking{
                 float base64Val = base64Detector.detect(environmentVariables[i].secret);
                 float apiVal = apiKeyDetector.detect(environmentVariables[i].secret);
 
+                // Console.WriteLine($"secret: {environmentVariables[i].secret}");
                 if(apiVal > 0) //critical
                 {
                     var temp = environmentVariables[i];
@@ -93,7 +94,6 @@ namespace Project.SecretDetection.EnvironmentChecking{
                         temp.comment = temp.comment + "This string looks like hex and has high entropy. ";
                         environmentVariables[i] = temp; 
                     }
-                    //return with no detection
                 }
                 else if(entVal > 0)
                 {
@@ -121,7 +121,7 @@ namespace Project.SecretDetection.EnvironmentChecking{
                     {
                         var temp = environmentVariables[i];
                         float weight = httpDetector.getWeight(trees, environmentVariables[i].name);
-                        Console.WriteLine("The weight for the secret " + environmentVariables[i].name + ":"+ weight);
+                        Console.WriteLine($"The weight for the secret {environmentVariables[i].name}: {weight}");
                         temp.score = temp.score * weight;
                         // temp.comment = temp.comment + "This string is being used in http. ";
                         environmentVariables[i] = temp;

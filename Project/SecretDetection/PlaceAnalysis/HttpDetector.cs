@@ -12,29 +12,22 @@ namespace Project.SecretDetection.PlaceAnalysis{
         public float weight = 1.0F;
         public override float getWeight(List<SyntaxTree> trees, string secret)
         {
-            weight = 1.0F; //reset (ikke 0, fordi vi skal gange med den:))
+            weight = 1.0F; //reset
             var dataflow = new DataFlowAnalyzer();
-            List<SyntaxToken> initAs = whatIsVarInitializedAs(trees, "HttpClient"); //hardcoded because we want to know what a developer has called a predefined HttpClient
-                                                        //  could also have been hardcoded into the function below
-            
-            // var initAs = SyntaxFactory.Identifier("_httpClient");//test variable
-            string str = "";
-            foreach (var ia in initAs)
-            {
-                str = str + ia + " ";
-            }
-            // Console.WriteLine("Tracing variables associated with: " + str);
-            // Console.WriteLine("");
+            List<SyntaxToken> initAs = whatIsVarInitializedAs(trees, "HttpClient"); //hardcoded "HttpClient" because we want to know what a developer has called a predefined HttpClient
+                                                                                    //could also have been hardcoded into the function whatIsVarInitializedAs as lookFor
 
-            List<SyntaxToken> results = dataflow.dataflowAnalysis(trees, initAs);//, 0);            
-            // foreach(var res in results)
+            List<SyntaxToken> results = dataflow.dataflowAnalysis(trees, initAs); //returns a list of all id tokens that "have been touched" by a http client through out code
+           
+            // Debugging
+            // foreach(var res in results) 
             // {
             //     Console.WriteLine("the variables found associated with input variables: {0}", res);
             // }
 
-            if (results.Any(t => t.ValueText == secret))
+            if (results.Any(t => t.ValueText == secret)) //if we find the secret in the list, then we flag that secret
             {
-                weight += 100.0F;
+                weight = 100.0F;
             }
 
             return weight;
@@ -68,10 +61,6 @@ namespace Project.SecretDetection.PlaceAnalysis{
                     .Select(v => v.Identifier) //Fix possible null
                     .ToList();                    
 
-                // foreach (var token in initAs)
-                // {
-                //     Console.WriteLine("What is {0} initialized as?: {1}", lookFor, token);
-                // }
                 if (initAs.Any())
                 {
                     results.AddRange(initAs);

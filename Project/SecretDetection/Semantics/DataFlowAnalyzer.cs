@@ -10,29 +10,23 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Project.SecretDetection.Semantics{
     class DataFlowAnalyzer
     {
-        public List<SyntaxToken> dataflowAnalysis(List<SyntaxTree> trees, List<SyntaxToken> idTokens)//, int counter)
+        public List<SyntaxToken> dataflowAnalysis(List<SyntaxTree> trees, List<SyntaxToken> idTokens)
         {
-            //we look into all id tokens -- possible that more are added
+            //we look into all id tokens
             //then for each id token we look through all trees
-            //We need to find the idtoken in the tree
-            //then check how its used
-            //Based on how its used its handled in switch
-            // Console.WriteLine("");
-            // Console.WriteLine("DataFlowAnalyzer entered");
-            // foreach(var id in idTokens)
-            // {
-            //     Console.WriteLine(id);
-            // }
+                //We need to find the idtoken in the tree
+            //then we want to know what its parents are, so we can add the correct new id tokens, and repeat
 
-            List<SyntaxToken> foundInTrees = getIdTokenInTree(trees, idTokens);
-            
+            List<SyntaxToken> foundInTrees = getIdTokenInTree(trees, idTokens); // find the id tokens in the tree
             List<SyntaxToken> newFinds = new List<SyntaxToken>();
+
             foreach(var id in foundInTrees) //Not sure I want it handled like this
             {
-                newFinds.AddRange(howIsVariableUsed(trees, foundInTrees, id.Parent));
+                newFinds.AddRange(howIsVariableUsed(trees, foundInTrees, id.Parent)); //adds new tokens to a list depending on the nodes parent (expression syntax...)
             }
             newFinds.AddRange(idTokens);
-            List<SyntaxToken> newNewFinds = newFinds.Distinct().ToList();
+            
+            List<SyntaxToken> newNewFinds = newFinds.Distinct().ToList(); //the new and old tokens mixed, without repeated tokens
 
             var onlyInFirst = newNewFinds.Except(idTokens);
             var onlyInSecond = idTokens.Except(newNewFinds);
@@ -40,12 +34,10 @@ namespace Project.SecretDetection.Semantics{
 
             if(areEqual) // Checker om de to lister er ens
             {
-                // Console.WriteLine("new=id");
-                return idTokens; //Stop klods
+                return idTokens; //Stop klods - no new tokens to analyze
             }
             else
             {
-                // Console.WriteLine("new!=id");
                 return dataflowAnalysis(trees, newNewFinds); //rekursivt kald for at analysere den nye liste af id tokens
             }
         }
@@ -69,28 +61,24 @@ namespace Project.SecretDetection.Semantics{
         
         public List<SyntaxToken> howIsVariableUsed(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
         {
-            //is variable part of an invocationmethod?
-                //send on to how to save the new identificationTokens according to method handling
-            // is variable part of ...
             switch (node)
             {
                 case MemberAccessExpressionSyntax memberAccess:
-                    // Console.WriteLine($"Token {node} is part of a member access: {memberAccess}");
                     return memberAccessHandler(trees, idTokens, node);
                 case InvocationExpressionSyntax invocation:
-                    // Console.WriteLine($"Token {node} is part of a member access: {invocation}");
                     return invocationHandler(trees, idTokens, node);
                 case VariableDeclaratorSyntax variableDeclarator:
-                    // Console.WriteLine($"Token {node} is part of a member access: {variableDeclarator}");
                     return variableDeclaratorHandler(trees, idTokens, node);
                 case AssignmentExpressionSyntax assignment:
-                    return new List<SyntaxToken>(); 
+                    return assignmentExpressionHandler(trees, idTokens, node); 
                 case ParameterSyntax parameter:
-                    return new List<SyntaxToken>(); 
+                    return new List<SyntaxToken>(); //Needs handling
+                case ExpressionStatementSyntax expression:
+                    return expressionStatementHandler(trees, idTokens, node);
+                //might be missing some cases - needs researching
                 default:
-                    // Console.WriteLine($"NOPE: Token {node} is not part of any switch case");
-                    if (node.Parent != null){
-                        return howIsVariableUsed(trees, idTokens, node.Parent); //Not sure if this should be done like this?
+                    if (node.Parent != null){ 
+                        return howIsVariableUsed(trees, idTokens, node.Parent); //Not sure if this should be done like this? 
                     }
                     return new List<SyntaxToken>();
             }
@@ -116,16 +104,35 @@ namespace Project.SecretDetection.Semantics{
                 .ToList();
 
             return newIdTokens;
-                        //Lavet rekursions venlig med en ny liste der bliver returneret, hvis man tilføjer til idTokens, og returnerer den er den ikke rekursions venlig altså den vil ikke kunne se der er sket noget nyt forrest i rekursionen.
         }
         
+        //The next couple of functions are identical except for their name
         public List<SyntaxToken> variableDeclaratorHandler(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
         {
             var newIdTokens = node.DescendantTokens()
-                .Where(t => t.IsKind(SyntaxKind.IdentifierToken) && !idTokens.Contains(t)) // && t.ValueText != "city") //city is outcommented for now - to make debugging easier
+                .Where(t => t.IsKind(SyntaxKind.IdentifierToken) && !idTokens.Contains(t))// && t.ValueText != "city") // to make debugging easier
                 .ToList();
 
             return newIdTokens;
         }
+
+        public List<SyntaxToken> expressionStatementHandler(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
+        {
+            var newIdTokens = node.DescendantTokens()
+                .Where(t => t.IsKind(SyntaxKind.IdentifierToken) && !idTokens.Contains(t))
+                .ToList();
+
+            return newIdTokens;
+        }
+
+        public List<SyntaxToken> assignmentExpressionHandler(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
+        {
+            var newIdTokens = node.DescendantTokens()
+                .Where(t => t.IsKind(SyntaxKind.IdentifierToken) && !idTokens.Contains(t))
+                .ToList();
+
+            return newIdTokens;
+        }
+
     }
 }
