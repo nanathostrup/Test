@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace Project.SecretDetection.SecretsAnalysis{
-    public class Base64Detector : Detector
+    public class Base64Detector : SecretDetector
     {
         public float score = 0;
         public override float detect(string secret)
@@ -18,9 +18,7 @@ namespace Project.SecretDetection.SecretsAnalysis{
             if (base64)
             {
                 score += 3000.0F;
-                // return 1;
             }
-            // else return 0;
             return score;
         }
         public bool isItBase64(string secret)
@@ -32,7 +30,6 @@ namespace Project.SecretDetection.SecretsAnalysis{
 
                 var bytes = Convert.FromBase64String(base64);
                 var decoded = new System.Text.UTF8Encoding(false, true).GetString(bytes); // Tak til chat:)
-                // Console.WriteLine(decoded);
 
                 return true;
             }

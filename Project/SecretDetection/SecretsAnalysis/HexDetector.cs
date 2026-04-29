@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace Project.SecretDetection.SecretsAnalysis{
-    public class HexDetector : Detector
+    public class HexDetector : SecretDetector
     {
         public float score;
         public override float detect(string secret)
@@ -19,9 +19,7 @@ namespace Project.SecretDetection.SecretsAnalysis{
             if (hex)
             {
                 score += 200.0F;
-                // return 1;
             }
-            // else return 0;
             return score;
         }
 

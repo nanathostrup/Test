@@ -17,15 +17,19 @@ namespace Project.SecretDetection.PlaceAnalysis{
             List<SyntaxToken> initAs = whatIsVarInitializedAs(trees, "HttpClient"); //hardcoded "HttpClient" because we want to know what a developer has called a predefined HttpClient
                                                                                     //could also have been hardcoded into the function whatIsVarInitializedAs as lookFor
 
-            List<SyntaxToken> results = dataflow.dataflowAnalysis(trees, initAs); //returns a list of all id tokens that "have been touched" by a http client through out code
-           
+            Dictionary<SyntaxToken, List<SyntaxToken>> results = dataflow.initDataflow(trees, initAs);   //returns a list of all id tokens that "have been touched" by a http client through out code
+
             // Debugging
             // foreach(var res in results) 
             // {
-            //     Console.WriteLine("the variables found associated with input variables: {0}", res);
+            //     Console.WriteLine("the variables found associated with variable '{0}' are:", res.Key);
+            //     foreach(var list in res.Value)
+            //     {
+            //         Console.WriteLine("   "+ list);
+            //     }
             // }
 
-            if (results.Any(t => t.ValueText == secret)) //if we find the secret in the list, then we flag that secret
+            if (results.Keys.Any(t => t.ValueText == secret)) //if we find the secret in the list, then we flag that secret
             {
                 weight = 100.0F;
             }
@@ -56,10 +60,10 @@ namespace Project.SecretDetection.PlaceAnalysis{
                 
                 // Find out what the Identification Tokens in AST are initialized as
                 var initAs = idTokensSyntaxNodes
-                    .Select(n => n.FirstAncestorOrSelf<VariableDeclaratorSyntax>()) //Fix possible null
+                    .Select(n => n.FirstAncestorOrSelf<VariableDeclaratorSyntax>())
                     .Where(v => v != null)
-                    .Select(v => v.Identifier) //Fix possible null
-                    .ToList();                    
+                    .Select(v => v.Identifier)
+                    .ToList();
 
                 if (initAs.Any())
                 {

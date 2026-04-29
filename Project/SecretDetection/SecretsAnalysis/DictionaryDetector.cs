@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace Project.SecretDetection.SecretsAnalysis{
-    public class DictionaryDetector : Detector
+    public class DictionaryDetector : SecretDetector
     {
         public float score = 0.0F;
         public override float detect(string secret)

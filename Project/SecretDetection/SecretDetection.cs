@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Project.SecretDetection.Semantics;
 using Project.SecretDetection.SecretsAnalysis;
-using Project.SecretDetection.EnvironmentChecking;
+using Project.SecretDetection.DetectionsTypes;
 using Project.SecretDetection.PlaceAnalysis;
 using System.Linq.Expressions;
 
@@ -29,63 +29,44 @@ namespace Project.SecretDetection{
             List<SyntaxTree> trees = ast.createASTs(filePath);
 
             Console.WriteLine("");
-            Console.WriteLine(" ===================== EXTRACT ENVIRONMENT CALL INPUTS ======================= ");
+            Console.WriteLine(" ================================= WALK AST ================================= ");
+            
+            //walk tree to find special rule for invocation expressions with "GetEnvironmentVariable" condition
             var walker = new Walker();
             foreach (SyntaxTree tree in trees)
             {
                 SyntaxNode root = tree.GetRoot(); //Get the root of the tree
                 walker.Visit(root); //Check the current AST for invocation expressions. Walker går gennem træet, og der er blevet lavet sær regel for invocation expressions
             }
-            foreach (var kvp in walker.EnvironmentVariableMap)
+            
+            Dictionary<string, string> environmentVariableMap = walker.EnvironmentVariableMap; //making a new dictionary that is not a walker.field -- can send this on
+
+            foreach (var kvp in walker.EnvironmentVariableMap) //For debugging
             {
                 Console.WriteLine("GetEnvironmentVariable() input: " + kvp.Key);
-                Console.WriteLine("Initialized as: " + kvp.Value);
-                Console.WriteLine("");
+                Console.WriteLine("                Initialized as: " + kvp.Value);
+                // Console.WriteLine("");
             }
-
-
+            
             Console.WriteLine("");
             Console.WriteLine(" ================================= ENV CHECK ================================= ");
-            var envChecker =  new EnvChecker();
-            List<EnvChecker.EnvironmentVariable> unusedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
-            List<EnvChecker.EnvironmentVariable> usedEnvironmentVariables = new List<EnvChecker.EnvironmentVariable>();
-            unusedEnvironmentVariables = envChecker.getUnusedEnvVariables(walker.EnvironmentVariableMap, filePath); 
-            usedEnvironmentVariables = envChecker.getUsedEnvVariables(walker.EnvironmentVariableMap, filePath);
+            var envFileDetection = new EnvironmentFileDetection();
+            envFileDetection.handleDetection(trees, filePath, environmentVariableMap);
             
-            Console.WriteLine("");
-            foreach(var unusedEnvironmentVariable in unusedEnvironmentVariables)
-            {
-                Console.WriteLine("UNUSED ENVIRONMENT VARIABLE {0} FOUND IN FILE: {1}, ON LINE {2}. SECRET: {3}", 
-                unusedEnvironmentVariable.name, unusedEnvironmentVariable.envfile, unusedEnvironmentVariable.index, unusedEnvironmentVariable.secret);
-            }
-            foreach(var usedEnvironmentVariable in usedEnvironmentVariables)
-            {
-                Console.WriteLine("USED ENVIRONMENT VARIABLE {0} FOUND IN FILE: {1}, ON LINE {2}. SECRET: {3}", 
-                usedEnvironmentVariable.name, usedEnvironmentVariable.envfile, usedEnvironmentVariable.index, usedEnvironmentVariable.secret);
-            }
-            
-            Console.WriteLine("");
-            Console.WriteLine(" ============================ DATA FLOW ANALYSIS ============================= ");
-            var httpDetector = new HttpDetector(); // Skal rykkes ind i envchecker når done fordi det er sådan man får en weight ligesom med secret scoring
-            foreach(var used in usedEnvironmentVariables)
-            {
-                Console.WriteLine("");
-                float weight = httpDetector.getWeight(trees, used.name);
-                Console.WriteLine("The weight of http location detection: {0}, for variable {1}", weight, used.name);    
-            }
 
-            //SINGLE TEST FOR DEBUGGING
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// DEBUGGING///
+            
+            // Console.WriteLine("");
+            // Console.WriteLine(" ================================= DATAFLOW ANALYSIS ================================= ");
+            // var httpDetector= new HttpDetector();
             // List<SyntaxTree> firstTree = new List<SyntaxTree> { trees[2] };
             // float weight = httpDetector.getWeight(firstTree, "defaultCity");
-            // Console.WriteLine("The weight of http location detection: {0}, for variable {1}", weight, "defaultCity");   
+            // Console.WriteLine("The weight of http location detection: {0}, for variable {1}", weight, "defaultCity"); 
 
 
-            Console.WriteLine("MISSING: Finish dataflow analysis, only partly done"); 
-
-            
-
-            Console.WriteLine("");
-            Console.WriteLine(" ================================= SCORING =================================== ");
+            // Console.WriteLine("");
+            // Console.WriteLine(" ================================= SCORING =================================== ");
             // var entropyDetector = new EntropyDetector();
             // var hexDetector = new HexDetector();
             // var base64Detector = new Base64Detector();
@@ -93,15 +74,12 @@ namespace Project.SecretDetection{
             // var apikeyDetector = new APIKeyDetector();
             // apikeyDetector.detect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30");
 
-            var envScorer = new EnvScorer();
-            Console.WriteLine(usedEnvironmentVariables[1].secret);
-            envScorer.giveScore(usedEnvironmentVariables, trees);
-            envScorer.giveWeight(usedEnvironmentVariables, trees);
+            // var envScorer = new EnvScorer();
+            // envScorer.getScore(usedEnvironmentVariables, trees);
 
-            Console.WriteLine("");
-            envScorer.giveScore(unusedEnvironmentVariables, trees);
-            
-
+            // Console.WriteLine("");
+            // envScorer.getScore(unusedEnvironmentVariables, trees);
+        
 
             // // // Console.WriteLine(" ############ TEST ############ ");
             // // // List<string> randomwords = new List<string>() {"oranges", "google", "traffic light", "cykel", "random", "ApiKeys", "Cryptography", "durumrulle", "laptopskærm", "entropy", "ARGGHHHHHH", "pneumonoultramicroscopicsilicovolcanoconiosis", "Antidisestablishmentarianism", "kat", "Champ", "Titin", "Aegilops", "Champichamp", "DemonChild", "Bæstet"};
@@ -118,25 +96,6 @@ namespace Project.SecretDetection{
             // // //     Console.WriteLine("Measured entropy for string {0}: {1}", str, val);
             // // // }
 
-
-
-            Console.WriteLine("");
-            Console.WriteLine(" ================================== REPORT =================================== ");            
-            string logpath = Path.Combine(Directory.GetCurrentDirectory(), "Report.txt"); //Create the output log
-            logpath = Path.GetFullPath(logpath);
-
-            using (StreamWriter writer = new StreamWriter(logpath, append: false)) // append: false to overwrite, true to append to existing file, tak til chat:)
-            {
-                foreach (var usedEnvVar in usedEnvironmentVariables)
-                {
-                    writer.WriteLine("An environment variable is used in file {0} on line {1} and has a score of {2}. {3}", usedEnvVar.envfile, usedEnvVar.index, usedEnvVar.score, usedEnvVar.comment);
-                }
-                foreach (var unusedEnvVar in unusedEnvironmentVariables)
-                {
-                    writer.WriteLine("An unused environment variable is detected in file {0} on line {1} and has a score of {2}. {3}", unusedEnvVar.envfile, unusedEnvVar.index, unusedEnvVar.score, unusedEnvVar.comment);
-                }
-            }
-            Console.WriteLine("A report has been made in {0} \n", logpath);
 
             //For printing each AST
             // foreach (SyntaxTree tree in trees)

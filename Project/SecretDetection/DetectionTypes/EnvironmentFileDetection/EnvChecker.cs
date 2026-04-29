@@ -6,37 +6,16 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
-namespace Project.SecretDetection.EnvironmentChecking{
+namespace Project.SecretDetection.DetectionsTypes.EnvironmentFileDetections{
     class EnvChecker
     {
-        public struct EnvironmentVariable
-            {
-                public int index { get; set;} //where is it located?
-                public string envfile { get; set;} //where is it located?
-                public string secret { get; set;} //what is the detection "secret"?
-                public string name { get; set;} //what is it initialized as? What is the secrets "name"?
-                public float score { get; set;} //how critical a detection is
-                public string comment { get; set;} //what kind of "secret" is it if any?
-                public bool used { get; set;} //is the variable used in code?
-                public EnvironmentVariable(int index, string envfile, string secret, string name, float score, string comment, bool used)
-                {
-                    this.index = index;
-                    this.envfile = envfile;
-                    this.secret = secret;
-                    this.name = name;
-                    this.score = score;
-                    this.comment = comment;
-                    this.used = used;
-                } 
-            }
-
-        public List<EnvironmentVariable> getUnusedEnvVariables(Dictionary<string, string> environmentVariableMap, string filePath) //OPTIMIZE!!!
+        public List<EnvironmentFileDetection.EnvironmentVariable> getUnusedEnvVariables(Dictionary<string, string> environmentVariableMap, string filePath) //OPTIMIZE!!!
         {
             //For each stringargument 
                 //is it present in the envfiles?
                     //if so - extract the suffix in the file
             
-            List<EnvironmentVariable> unusedEnvironmentVariables = new List<EnvironmentVariable>();
+            List<EnvironmentFileDetection.EnvironmentVariable> unusedEnvironmentVariables = new List<EnvironmentFileDetection.EnvironmentVariable>();
             bool used = false;
 
             var EnvFiles = Directory.EnumerateFiles(filePath, "*", SearchOption.AllDirectories)
@@ -57,7 +36,6 @@ namespace Project.SecretDetection.EnvironmentChecking{
                     i++; //update the index counter every time we move line :)
                     used = false;
                     
-
                     foreach (var kvp in environmentVariableMap)
                     {
                         if (line.Contains(kvp.Key))
@@ -75,7 +53,7 @@ namespace Project.SecretDetection.EnvironmentChecking{
                         string comment = ""; //Den skal initialiseres her, og opdateres i analyse delen   
                         string name = extractName(line); //smid navnet på hvad secreten er initialiseret som ind 
                                                          // -- Anderledes end usedenvvars fordi det den er intialiseret som bare er i env filen og ikke i koden
-                        var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, name, score, comment, false);
+                        var envVar = new EnvironmentFileDetection.EnvironmentVariable(locationIndex, envfile, extractedStr, name, score, comment, false);
                         unusedEnvironmentVariables.Add(envVar);
                     }
                 }
@@ -84,9 +62,9 @@ namespace Project.SecretDetection.EnvironmentChecking{
         }
 
 
-        public List<EnvironmentVariable> getUsedEnvVariables(Dictionary<string, string> environmentVariableMap, string filePath) //OPTIMIZE!!!
+        public List<EnvironmentFileDetection.EnvironmentVariable> getUsedEnvVariables(Dictionary<string, string> environmentVariableMap, string filePath) //OPTIMIZE!!!
         {
-            List<EnvironmentVariable> usedEnvironmentVariables = new List<EnvironmentVariable>();
+            List<EnvironmentFileDetection.EnvironmentVariable> usedEnvironmentVariables = new List<EnvironmentFileDetection.EnvironmentVariable>();
 
             var EnvFiles = Directory.EnumerateFiles(filePath, "*", SearchOption.AllDirectories)
                 .Where(f =>
@@ -116,7 +94,7 @@ namespace Project.SecretDetection.EnvironmentChecking{
                             float score = 0.0F; //Den skal initialiseres her, og opdateres i analysen af stringen
                             string comment = ""; //Den skal initialiseres her, og opdateres i analyse delen
                             string name = kvp.Value; //Hvad selve secreten er initializeret som i koden. Skal bruges til dataflow analysen
-                            var envVar = new EnvironmentVariable(locationIndex, envfile, extractedStr, name, score, comment, true);
+                            var envVar = new EnvironmentFileDetection.EnvironmentVariable(locationIndex, envfile, extractedStr, name, score, comment, true);
                             usedEnvironmentVariables.Add(envVar);
                         }
                     }

@@ -1,0 +1,26 @@
+void a() 
+{
+    var some_secret = Environment.GetEnvironmentVariable("SOME_SECRET");
+    b(some_secret);
+}
+
+void b(string idk_what_to_call_this)
+{
+    Something.ALotOfWork(); 
+
+    // ... 
+
+    c("https://example.com/api/data", idk_what_to_call_this);
+
+    // ... 
+    
+    World.Peace();
+}
+
+int c(string url, string token)
+{
+    var client = new HttpClient();
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    var response = client.GetAsync(url).Result;
+    return response.StatusCode;
+}

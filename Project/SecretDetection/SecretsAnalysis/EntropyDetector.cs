@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace Project.SecretDetection.SecretsAnalysis{
-    public class EntropyDetector : Detector
+    public class EntropyDetector : SecretDetector
     {
         public float score;
         public override float detect (string secret)
@@ -16,10 +16,7 @@ namespace Project.SecretDetection.SecretsAnalysis{
             score = 0.0F; 
             double entropy = ShannonEntropy(secret);
             entropy = Math.Round(entropy);
-            int convetedEntropy = Convert.ToInt32(entropy);
-            
-            // Console.WriteLine("Measured entropy of {0} was {1}", secret, ShannonEntropy(secret));
-            
+            int convetedEntropy = Convert.ToInt32(entropy);            
             //Evt lav til switch case
             // if (convetedEntropy > 5) // eks på mulig expansion in the future - men out of scope here
             // {
@@ -29,18 +26,15 @@ namespace Project.SecretDetection.SecretsAnalysis{
             // {
             //     return 100;
             // }
-            if (convetedEntropy > 3)// Vilkårlig threshhold, som skal kunne ændres senere hen
+            if (convetedEntropy > 3)// Vilkårlig threshhold, som kan ændres senere hen
             {
                 score =+ 10.0F;
-                // return 1;
             }
-            // else return 0;
             return score;
         }
 
         //This function is a translation of the function here: https://thesagardahal.medium.com/understanding-shannon-entropy-measuring-randomness-for-secure-code-auditing-4b3c5697a7f9
         //Exact implementation is in python - see python/entrpy.py for their full code implementation
-        //Tyyyyv stjålet :)
         public double ShannonEntropy(string str)
         {
             if (str == null)

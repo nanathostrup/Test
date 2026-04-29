@@ -9,7 +9,7 @@ using Project.SecretDetection.SecretsAnalysis.APIKeyVariants;
 
 
 namespace Project.SecretDetection.SecretsAnalysis{
-    public class APIKeyDetector: Detector
+    public class APIKeyDetector: SecretDetector
     {
         public float score = 0.0F;
         public string apiType = "NONE";
@@ -19,18 +19,15 @@ namespace Project.SecretDetection.SecretsAnalysis{
             if (doesItLookLikeAPIKey(secret))
             {
                 score += 40000.0F;
-                // return 1;
             }
             return score;
-            // return 0;
         }
 
         public bool doesItLookLikeAPIKey(string secret) 
         {
             apiType = "NONE";
             var jwt = new JWTDetector();
-            bool looskLikeJWT = jwt.isItAPI(secret);
-            if (looskLikeJWT)
+            if (jwt.isItAPI(secret))
             {
                 apiType = "a JWT secret token";
                 return true;
