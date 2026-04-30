@@ -11,7 +11,7 @@ using Project.SecretDetection.Semantics;
 namespace Project.SecretDetection.DetectionsTypes{
     public class EnvironmentFileDetection : DetectionsType //Abstract class for different scoring systems
     {
-        public struct EnvironmentVariable //NOGET AF DET HER SKAL OVER I ABSTRACT CLASS
+        public struct EnvironmentVariable //NOGET AF DET HER SKAL OVER I ABSTRACT CLASS?
         {
             public int index { get; set;} //where is it located?
             public string envfile { get; set;} //where is it located?
@@ -90,7 +90,7 @@ namespace Project.SecretDetection.DetectionsTypes{
         public List<EnvironmentVariable> giveScore(List<SyntaxTree> trees, List<EnvironmentVariable> environmentVariables)
         {
             var envScorer = new EnvScorer();
-            return envScorer.getScoreEnvironmentScore(environmentVariables, trees);
+            return envScorer.getEnvironmentScore(environmentVariables, trees);
         }
         public void buildReport(List<EnvironmentVariable> environmentVariables, bool appendable)
         {

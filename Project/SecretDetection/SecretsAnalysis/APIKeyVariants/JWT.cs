@@ -11,12 +11,8 @@ namespace Project.SecretDetection.SecretsAnalysis.APIKeyVariants{
     public class JWTDetector : APIVariant
     {
         public string apiType = "JWT secret token";
-        public override bool isItAPI(string secret)
+        public override bool isItAPI(string secret) //Does the string follow the format of a jwt secret?
         {
-            //Does the string follow the format of a jwt secret?
-
-            // Console.WriteLine(secret);
-
             int count = 0;
             foreach (char c in secret) { // Should only be 2 periods: 1 between header and payload and one between payload and signature
                 if (c == '.') count++;
@@ -31,17 +27,10 @@ namespace Project.SecretDetection.SecretsAnalysis.APIKeyVariants{
                     string header = secret.Split('.')[0];
                     string payload = secret.Split('.')[1];
                     string signature = secret.Split('.')[2]; // Her kan vi allerede se at det måske godt kunne følge en format. Sus goes up
-                    // Console.WriteLine(header);
-                    // Console.WriteLine(payload);
-                    // Console.WriteLine(signature);
 
                     var base64Detector = new Base64Detector(); 
                     bool headerIsBase64 = base64Detector.isItBase64(header);
-                    // Console.WriteLine("Header is encoded?: " + headerIsBase64);
                     bool payloadIsBase64 = base64Detector.isItBase64(payload);
-                    // Console.WriteLine("Payload is encoded?: " +payloadIsBase64);
-                    // bool signatureIsBase64 = base64Detector.isItBase64(signature);
-                    // Console.WriteLine("Signature is encoded?: " + signatureIsBase64);
 
                     //Her ved vi at der er 3 sections, og header og payload er base64 encoded.
                     //Nok til at sige det er en token?
@@ -55,7 +44,6 @@ namespace Project.SecretDetection.SecretsAnalysis.APIKeyVariants{
                 }
                 catch //Eller følger det ikke format og ligner ikke en secret
                 {
-                    // Console.WriteLine("we catching");
                     return false;
                 }
             }

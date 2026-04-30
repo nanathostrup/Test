@@ -18,7 +18,7 @@ namespace Project.SecretDetection.DetectionsTypes.EnvironmentFileDetections{
         //get score from analysis
         //sum up the different scores based on the fact its in the env
 
-        public List<EnvironmentFileDetection.EnvironmentVariable> getScoreEnvironmentScore(List<EnvironmentFileDetection.EnvironmentVariable> environmentVariables, List<SyntaxTree> trees) //Til abstract class
+        public List<EnvironmentFileDetection.EnvironmentVariable> getEnvironmentScore(List<EnvironmentFileDetection.EnvironmentVariable> environmentVariables, List<SyntaxTree> trees) //Til abstract class
         {
             var updatedScore = new List<EnvironmentFileDetection.EnvironmentVariable>(); 
             for (int i = 0; i < environmentVariables.Count; i++)
@@ -86,17 +86,14 @@ namespace Project.SecretDetection.DetectionsTypes.EnvironmentFileDetections{
                 environmentVariable.score += base64Val;
                 environmentVariable.comment = environmentVariable.comment + "This string looks like it is base64 encoded. ";
             }
-            if (hexVal > 0) //&& Does not look like a word
+            if (entVal > 0)
             {
-                if (entVal > 0) // medium detection
+                if (hexVal > 0)// medium detection
                                 // we dont raise flags if entropy is low and it looks like a hex
                 {
                     environmentVariable.score += hexVal;
                     environmentVariable.comment = environmentVariable.comment + "This string looks like hex and has high entropy. ";
                 }
-            }
-            else if(entVal > 0)
-            {
                 if (environmentVariable.secret.Length > 15) //mild detection
                                                             //Ryk evt denne bound ind i entropy detector klassen (det er dens ansvar at give en score)
                                                             //15 fordi det er et langt ord. Kan ændres.
@@ -114,11 +111,11 @@ namespace Project.SecretDetection.DetectionsTypes.EnvironmentFileDetections{
             //place detectors
             var httpDetector = new HttpDetector();
             float httpWeight = httpDetector.getWeight(trees, environmentVariable.name);
-            float sumWeight = 1.0F;
+            float usedWeight = 1.0F;
 
-            if (environmentVariable.used)
+            if (environmentVariable.used) //lige gyldigt check, da vi ikke går ind i denne funktion hvis den ikke er brugt, men for tydelighedens skyld
             {
-                sumWeight += 1.0F; //Bare lige for at markere at det er noget der bliver brugt og har lidt mere vægt? Kan tages ud igen
+                usedWeight += 1.0F; //Bare lige for at markere at det er noget der bliver brugt og har lidt mere vægt? Kan tages ud igen
             }
 
             environmentVariable.score = environmentVariable.score * httpWeight * sumWeight;

@@ -149,6 +149,9 @@ namespace Project.SecretDetection.Semantics{
         
         public List<SyntaxToken> howIsVariableUsed(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
         {
+
+
+            // HVAD MED PREDEFINED IDENTIFIER NAMES I NOGLE KONTEKSTER?
             switch (node)
             {
                 case MemberAccessExpressionSyntax memberAccess:

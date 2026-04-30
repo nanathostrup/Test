@@ -22,7 +22,7 @@ namespace Project.SecretDetection.SecretsAnalysis{
                 string contents = reader.ReadToEnd();
                 if (contents.Contains(secret))
                 {
-                    return score += 6000.0F;
+                    return score += 60000.0F;
                 }
             }
 
