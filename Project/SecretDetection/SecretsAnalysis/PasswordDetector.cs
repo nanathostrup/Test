@@ -14,19 +14,34 @@ namespace Project.SecretDetection.SecretsAnalysis{
         public override float detect(string secret)
         {
             score = 0.0F;
-            string filepath = Directory.GetCurrentDirectory(); //non-hardcoded
-            string mostCommonPasswords = filepath+ @"\SecretDetection\SecretsAnalysis\CommonPasswords\10k-most-common.txt";            
 
-            using (StreamReader reader = new StreamReader(mostCommonPasswords))
+            if (isItPassword(secret))
             {
-                string contents = reader.ReadToEnd();
-                if (contents.Contains(secret))
-                {
-                    return score += 60000.0F;
-                }
+                 return score += 60000.0F;
             }
 
             return score;
-        }    
+        }
+
+        public bool isItPassword(string secret)
+        {
+            string filepath = Directory.GetCurrentDirectory(); //non-hardcoded
+            string CommonPasswords = filepath+ @"\SecretDetection\SecretsAnalysis\CommonPasswords";            
+
+            var txtFiles = Directory.GetFiles(CommonPasswords, "*.txt");
+
+            foreach (var file in txtFiles)
+            {
+                using (StreamReader reader = new StreamReader(file))
+                {
+                    string contents = reader.ReadToEnd();
+                    if (contents.Contains(secret))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } 
     }
 }

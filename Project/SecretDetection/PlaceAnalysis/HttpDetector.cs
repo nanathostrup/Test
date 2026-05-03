@@ -29,7 +29,8 @@ namespace Project.SecretDetection.PlaceAnalysis{
             //     }
             // }
 
-            if (results.Keys.Any(t => t.ValueText == secret)) //if we find the secret in the list, then we flag that secret
+            // if (results.Keys.Any(t => t.ValueText == secret)) //if we find the secret in the list, then we flag that secret
+            if (results.Keys.Any(key => ReachesSecret(key, results, secret)))
             {
                 weight = 100.0F;
             }
@@ -72,6 +73,33 @@ namespace Project.SecretDetection.PlaceAnalysis{
             }
             return results;
 
+        }
+        private bool ReachesSecret(SyntaxToken start, Dictionary<SyntaxToken, List<SyntaxToken>> graph, string secret)
+        {
+            var visited = new HashSet<SyntaxToken>();
+            var stack = new Stack<SyntaxToken>();
+            stack.Push(start);
+
+            while (stack.Count > 0)
+            {
+                var current = stack.Pop();
+
+                if (!visited.Add(current))
+                    continue;
+
+                // Check match
+                if (current.ValueText == secret)
+                    return true;
+
+                // Traverse further if current is also a key
+                if (graph.TryGetValue(current, out var nextTokens))
+                {
+                    foreach (var next in nextTokens)
+                        stack.Push(next);
+                }
+            }
+
+            return false;
         }
     }
 }

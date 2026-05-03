@@ -13,10 +13,10 @@ namespace Project.SecretDetection.Semantics{
     {
         public Dictionary<SyntaxToken, List<SyntaxToken>> initDataflow(List<SyntaxTree> trees, List<SyntaxToken> idTokens)
         {
-            List<SyntaxToken> foundInTrees = getIdTokenInTree(trees, idTokens);
+            // List<SyntaxToken> foundInTrees = getIdTokenInTree(trees, idTokens);
 
             var dict = new Dictionary<SyntaxToken, List<SyntaxToken>>(); 
-            foreach (var token in foundInTrees)
+            foreach (var token in idTokens)
             {
                 dict[token] = new List<SyntaxToken>();
             }
@@ -39,6 +39,7 @@ namespace Project.SecretDetection.Semantics{
             //     return idTokens;
             // }
             
+            //We need to look for all instances of the keys in the tree so that we can use them for the analysis
             List<SyntaxToken> lookFor = new List<SyntaxToken>(); 
             foreach (var kv in idTokens)
             {
@@ -89,12 +90,12 @@ namespace Project.SecretDetection.Semantics{
                     }
                 }
             }
-
             foreach (var add in additions)
             {
                 newFinds[add] = new List<SyntaxToken>();
             }
 
+            //check if idTokens and newFinds are the same - if they are the analysis did not add anything and we can end the function
             bool equal = areEqual(newFinds, idTokens);
             if (equal)
             {
@@ -102,7 +103,7 @@ namespace Project.SecretDetection.Semantics{
             }
             else
             {
-                // counter ++;
+                // counter ++; //til debugging
                 return dataflowAnalysis(trees, newFinds, visited);//, counter);
             }
         }
@@ -151,7 +152,7 @@ namespace Project.SecretDetection.Semantics{
         {
 
 
-            // HVAD MED PREDEFINED IDENTIFIER NAMES I NOGLE KONTEKSTER?
+            // HVAD MED PREDEFINED IDENTIFIER NAMES I NOGLE KONTEKSTER? -- e.g. Console.WriteLine eller GetEnvironmentVariable ... 
             switch (node)
             {
                 case MemberAccessExpressionSyntax memberAccess:
@@ -195,20 +196,27 @@ namespace Project.SecretDetection.Semantics{
         }
         public List<SyntaxToken> invocationHandler(List<SyntaxTree> trees, List<SyntaxToken> idTokens, SyntaxNode node)
         {
-            // we look at the arguments that go into the invocation method only. Not the other stuff. This can be reevaluated for the future, but for the sake of this project it does not make sense. Time is also ticking:)))))
-            if(node is InvocationExpressionSyntax invocation)
-            {
-                var newIdTokens = invocation.ArgumentList
-                    .Arguments
-                    .Select(t => t.Expression)
-                    .OfType<IdentifierNameSyntax>()
-                    .Select(t => t.Identifier)
-                    .ToList();
+            // we look at the arguments that go into the invocation method only. 
+            // Not the other stuff. This can be reevaluated for the future, but for the sake of this project it does not make sense. Time is also ticking:)))))
+            //FAKTISK : implementer for alle børn for hvis der er en metode der skal traces, så bliver den det ikke her...
+            // if(node is InvocationExpressionSyntax invocation)
+            // {
+            //     var newIdTokens = invocation.ArgumentList
+            //         .Arguments
+            //         .Select(t => t.Expression)
+            //         .OfType<IdentifierNameSyntax>()
+            //         .Select(t => t.Identifier)
+            //         .ToList();
 
-                return newIdTokens;
-            }
-            //To handle other cases
-            return idTokens;
+            //     return newIdTokens;
+            // }
+            // //To handle other cases
+            // return idTokens;
+            var newIdTokens = node.DescendantTokens()
+                .Where(t => t.IsKind(SyntaxKind.IdentifierToken) && !idTokens.Contains(t))// && t.ValueText != "city") // to make debugging easier
+                .ToList();
+
+            return newIdTokens;
         }
         
         //The next couple of functions are identical except for their name
@@ -245,6 +253,5 @@ namespace Project.SecretDetection.Semantics{
         {
             return idTokens;
         }
-
     }
 }

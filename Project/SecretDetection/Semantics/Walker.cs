@@ -18,7 +18,7 @@ namespace Project.SecretDetection.Semantics{
 
             bool GetEnvVar = invocation.DescendantTokens()
                     .Any(t => t.IsKind(SyntaxKind.IdentifierToken) 
-                                && t.ValueText == "GetEnvironmentVariable");
+                                && (t.ValueText == "GetEnvironmentVariable" || t.ValueText == "GetEnvironmentVariables"));
 
             if (GetEnvVar)
             {
@@ -34,15 +34,19 @@ namespace Project.SecretDetection.Semantics{
                 //First parent whta is variable declarator,
                     //Thich child is the name that it is declared as
                 
+                //FIX THIS - IT MAY NOT HAPPEN!
                 var initializedas = invocation //Now we want what the variable name is initilialized as (so we can tract the variable with dataflow analysis)
                     .FirstAncestorOrSelf<VariableDeclaratorSyntax>() //Not declaraTION - then we get the entire line which is too much for getting the name its initialized as
-                    .Identifier.Text;
+                    ?.Identifier.Text;
 
                 if (arglist.Any())
                 {
                     foreach (var arg in arglist)
                     {
-                        EnvironmentVariableMap[arg] = initializedas;
+                        // if (initializedas != null)
+                        // {
+                            EnvironmentVariableMap[arg] = initializedas;   
+                        // }
                     }
                 }
             }

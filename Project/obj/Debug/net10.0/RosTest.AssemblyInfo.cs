@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RosTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb9a663abb5547beeef16fbadd0ff60535ca3c47")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea2a889009a13f75df7e7c9e2fc0e6e203bbbab6")]
 [assembly: System.Reflection.AssemblyProductAttribute("RosTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RosTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -118,7 +118,7 @@ namespace Project.SecretDetection{
             // Print tokens with values
             foreach (var token in node.ChildTokens())
             {
-                Console.WriteLine($"{padding}  TOKEN {token.Kind()} : {token.ValueText}");
+                Console.WriteLine($"{padding} {token.Kind()} {token.ValueText}");
             }
 
             foreach (var child in node.ChildNodes())

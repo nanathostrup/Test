@@ -118,7 +118,7 @@ namespace Project.SecretDetection.DetectionsTypes.EnvironmentFileDetections{
                 usedWeight += 1.0F; //Bare lige for at markere at det er noget der bliver brugt og har lidt mere vægt? Kan tages ud igen
             }
 
-            environmentVariable.score = environmentVariable.score * httpWeight * sumWeight;
+            environmentVariable.score = environmentVariable.score * httpWeight * usedWeight;
 
             if(httpWeight != 1.0)
             {
