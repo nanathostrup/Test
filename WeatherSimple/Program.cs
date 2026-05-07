@@ -6,7 +6,7 @@
         {
             Console.WriteLine("=== Weather Station ===");
 
-            var weatherService = new WeatherStation.WeatherServices();
+            var weatherService = new WeatherServices();
 
             Console.Write("Enter city: ");
             string? city = Console.ReadLine();
