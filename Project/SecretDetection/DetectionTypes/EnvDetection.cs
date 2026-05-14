@@ -11,7 +11,7 @@ using Project.SecretDetection.Semantics;
 namespace Project.SecretDetection.DetectionsTypes{
     public class EnvironmentFileDetection : DetectionsType //Abstract class for different scoring systems
     {
-        public struct EnvironmentVariable //NOGET AF DET HER SKAL OVER I ABSTRACT CLASS?
+        public struct EnvironmentVariable //SKAL IKKE VÆRE STRUCKT -OG NOGLE SKAL IND I ABSTRACT CLASS
         {
             public int index { get; set;} //where is it located?
             public string envfile { get; set;} //where is it located?

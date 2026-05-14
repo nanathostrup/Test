@@ -11,6 +11,7 @@ namespace Project{
         public static void Main(String[] args)
         {
             string filePath = @"C:\Users\natd\OneDrive - Netcompany\Desktop\test\WeatherSimple";
+            //string filePath= @"C:\Users\natd\OneDrive - Netcompany\Desktop\ad-portal";
             var secretDetector = new SecretDetector();
             secretDetector.Detect(filePath);
         }

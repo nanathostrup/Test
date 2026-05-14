@@ -17,7 +17,7 @@ namespace Project.SecretDetection.SecretsAnalysis{
 
             if (isItPassword(secret))
             {
-                 return score += 60000.0F;
+                 return score += 40000.0F;
             }
 
             return score;

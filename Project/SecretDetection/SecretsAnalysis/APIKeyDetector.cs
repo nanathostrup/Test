@@ -18,7 +18,7 @@ namespace Project.SecretDetection.SecretsAnalysis{
             score = 0.0F;
             if (doesItLookLikeAPIKey(secret))
             {
-                score += 40000.0F;
+                score += 500000.0F;
             }
             return score;
         }

@@ -86,17 +86,17 @@ namespace Project.SecretDetection.DetectionsTypes.EnvironmentFileDetections{
                 environmentVariable.score += base64Val;
                 environmentVariable.comment = environmentVariable.comment + "This string looks like it is base64 encoded. ";
             }
+            if (hexVal > 0) // medium detection
+            {
+                environmentVariable.score += hexVal;
+                environmentVariable.comment = environmentVariable.comment + "This string looks like hex. ";
+            }
             if (entVal > 0)
             {
-                if (hexVal > 0)// medium detection
-                                // we dont raise flags if entropy is low and it looks like a hex
-                {
-                    environmentVariable.score += hexVal;
-                    environmentVariable.comment = environmentVariable.comment + "This string looks like hex and has high entropy. ";
-                }
                 if (environmentVariable.secret.Length > 15) //mild detection
                                                             //Ryk evt denne bound ind i entropy detector klassen (det er dens ansvar at give en score)
-                                                            //15 fordi det er et langt ord. Kan ændres.
+                                                            //15 fordi det er et langt ord. Kan ændres. 
+                                                            //Kan evt slettes da det er del af entropi analyse anyways?
                 {
                     environmentVariable.score += entVal;
                     environmentVariable.comment = environmentVariable.comment + "This string is long and has high entropy. ";

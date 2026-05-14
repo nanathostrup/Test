@@ -26,10 +26,10 @@ namespace Project.SecretDetection.Semantics{
                         // && !f.Contains(@".sln") // Eller bare tag KUN cs filer? Der kigges ikke på andre filer gennem ast lige nu anyways
                     );
 
-            Console.WriteLine("Files being processed into an AST:");//to see what files are being processed, just to make my life easier
+            Console.WriteLine("Files being processed into an AST");//to see what files are being processed, just to make my life easier
                 foreach (string file in files)
                 {
-                    Console.WriteLine("     " + file); 
+                    // Console.WriteLine("     " + file); 
                     string code = File.ReadAllText(file);
                     SyntaxTree tree = CSharpSyntaxTree.ParseText(code); // parse code to AST
                     trees.Add(tree);
